@@ -33,7 +33,7 @@
         <div class="container"> 
             <div class="row">
                 <div class="col-12">
-                    
+
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h2 class="fw-bold text-white mb-0" style="text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
                             <i class="fas fa-user-edit"></i> Editar Perfil
@@ -44,7 +44,7 @@
                     </div>
 
                     <div class="profile-glass-card">
-                        
+
                         <div class="text-center mb-4">
                             <h2 class="section-title">Información Personal</h2>
                             <p class="text-muted">Actualiza tus datos y mantén tu cuenta segura</p>
@@ -58,7 +58,7 @@
                         </div>
 
                         <form th:action="@{/perfil/guardar}" method="post" enctype="multipart/form-data" th:object="${perfil}">
-                            
+
                             <div class="row mb-3">
                                 <div class="col-md-6 mb-3 mb-md-0">
                                     <label class="form-label fw-bold text-secondary">Nombre</label>
@@ -86,15 +86,17 @@
                             <div class="row mb-4">
                                 <div class="col-md-6 mb-4 mb-md-0">
                                     <h5 class="text-muted mb-3"><i class="fas fa-image"></i> Imagen de Perfil</h5>
-                                    
-                                    <div class="d-flex align-items-center mb-3 bg-white p-2 rounded border w-100" th:if="${perfil.avatar != null}">
-                                        <img th:src="@{${perfil.avatar}}" class="rounded-circle me-3" width="50" height="50" style="object-fit: cover;">
+
+                                    <div class="d-flex align-items-center mb-3 glass-preview-box w-100" th:if="${perfil.avatar != null}">
+                                        <img th:src="@{${perfil.avatar}}" class="rounded-circle me-3" width="50" height="50" style="object-fit: cover; border: 2px solid rgba(255,255,255,0.8);">
                                         <div>
-                                            <small class="d-block text-success fw-bold"><i class="fas fa-check"></i> Imagen actual</small>
+                                            <small class="d-block text-success fw-bold" style="text-shadow: 0 1px 1px rgba(255,255,255,0.5);">
+                                                <i class="fas fa-check"></i> Imagen actual
+                                            </small>
                                             <small class="text-muted" style="font-size: 0.8rem;">Se mantendrá si no subes otra.</small>
                                         </div>
                                     </div>
-                                    
+
                                     <div th:if="${perfil.avatar == null}" class="mb-2">
                                         <small class="text-muted fst-italic">No tienes imagen de perfil aún.</small>
                                     </div>
