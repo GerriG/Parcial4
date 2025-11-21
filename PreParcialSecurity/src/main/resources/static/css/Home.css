@@ -9,8 +9,6 @@ body {
     min-height: 100vh;
     font-family: 'Montserrat', sans-serif;
     color: #333;
-    
-    /* Fondo vibrante */
     background: linear-gradient(-45deg, #7eb4ff, #a674ff, #5dc8ff, #8d7aff);
     background-size: 400% 400%;
     animation: gradientMove 12s ease infinite;
@@ -53,23 +51,20 @@ body {
 }
 
 /* =========================================
-   3. PANEL PRINCIPAL (Glass Panel Acrílico)
+   3. PANEL PRINCIPAL (Base: 1366x768)
+   Este es el diseño original que funciona bien en laptops
    ========================================= */
 .glass-panel {
-    /* Fondo transparente (25%) para efecto acrílico */
     background: rgba(255, 255, 255, 0.25);
-    
-    /* Desenfoque intenso */
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     
     border-radius: 25px;
-    padding: 50px 40px;
+    padding: 50px 40px; /* Padding original */
     
-    /* SOLUCIÓN BUG ESQUINAS: Asegura que nada se salga del borde redondeado */
+    /* Corrección bug esquinas */
     overflow: hidden; 
     
-    /* Sombras y bordes de cristal */
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.4);
     border-top: 1px solid rgba(255, 255, 255, 0.7);
@@ -86,10 +81,10 @@ body {
     box-shadow: 0 15px 40px 0 rgba(31, 38, 135, 0.3);
 }
 
-/* Imagen de Avatar */
+/* Imagen de Avatar (Tamaño Base) */
 .avatar-container {
     position: relative;
-    width: 140px; /* Reducido ligeramente para mejor proporción */
+    width: 140px; /* Tamaño original */
     height: 140px;
     margin: 0 auto 25px auto;
 }
@@ -114,7 +109,7 @@ body {
     font-weight: 800;
     color: #2c3e50;
     margin-bottom: 5px;
-    font-size: 2rem; /* Tamaño controlado */
+    font-size: 2rem; /* Tamaño original */
     text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
@@ -126,7 +121,7 @@ body {
 }
 
 /* =========================================
-   4. BADGE DE ROL (Corrección de Bug)
+   4. BADGE DE ROL (Corrección Bug)
    ========================================= */
 .role-badge {
     color: white;
@@ -139,21 +134,15 @@ body {
     box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     border: 1px solid rgba(255, 255, 255, 0.3);
     text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    
-    /* IMPORTANTE: Quitamos backdrop-filter de aquí. 
-       Al tener un fondo casi opaco (0.9), el blur no se ve 
-       pero sí causa el error de recorte en las esquinas. */
     backdrop-filter: none; 
     -webkit-backdrop-filter: none;
 }
 
-/* Estilo Rojo para ADMIN */
 .badge-admin {
     background: linear-gradient(135deg, rgba(255, 107, 107, 0.95), rgba(255, 71, 87, 0.95));
     box-shadow: 0 4px 20px rgba(255, 71, 87, 0.4);
 }
 
-/* Estilo Azul para USUARIO */
 .badge-user {
     background: linear-gradient(135deg, rgba(79, 154, 255, 0.95), rgba(55, 66, 250, 0.95));
     box-shadow: 0 4px 20px rgba(55, 66, 250, 0.4);
@@ -175,8 +164,6 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    
-    /* Aquí sí dejamos el blur porque son más transparentes */
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
 }
@@ -196,7 +183,48 @@ body {
     background-color: rgba(255,255,255,0.1); 
 }
 
-/* Responsividad */
+/* =========================================
+   6. MEDIA QUERY: PANTALLAS GRANDES (1080p+)
+   Se activa SOLO si la pantalla es mayor a 1400px
+   ========================================= */
+@media (min-width: 1400px) {
+    /* Aumentamos el panel y controlamos su ancho */
+    .glass-panel {
+        padding: 70px 50px;
+        max-width: 850px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 100px;
+        border-radius: 35px;
+    }
+
+    /* Aumentamos el avatar */
+    .avatar-container {
+        width: 170px;
+        height: 170px;
+        margin-bottom: 30px;
+    }
+
+    /* Textos más grandes para llenar el espacio */
+    .user-name { font-size: 2.5rem; margin-bottom: 10px; }
+    .user-email { font-size: 1.1rem; margin-bottom: 30px; }
+
+    /* Botones más grandes */
+    .btn-custom {
+        padding: 15px 45px;
+        font-size: 1.1rem;
+        gap: 12px;
+    }
+    
+    .role-badge {
+        font-size: 1rem;
+        padding: 12px 35px;
+    }
+}
+
+/* =========================================
+   7. RESPONSIVIDAD MÓVIL (Menor a 768px)
+   ========================================= */
 @media (max-width: 768px) {
     .glass-panel {
         padding: 30px 20px;
