@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestión de Usuarios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { 
+            background: linear-gradient(-45deg, #7eb4ff, #a674ff, #5dc8ff, #8d7aff);
+            background-size: 400% 400%;
+            animation: gradientMove 12s ease infinite;
+            min-height: 100vh;
+            font-family: "Segoe UI", sans-serif;
+        }
+        @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        .glass-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-top: 40px;
+        }
+        .table th { background-color: rgba(0,0,0,0.03); }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4 text-white">
+            <h2 class="fw-bold"><i class="fas fa-users-cog"></i> Gestión de Usuarios</h2>
+            <a th:href="@{/home}" class="btn btn-light rounded-pill shadow-sm">
+                <i class="fas fa-arrow-left"></i> Volver al Home
+            </a>
+        </div>
+
+        <div class="glass-container">
+            <div th:if="${success}" class="alert alert-success rounded-pill text-center" th:text="${success}"></div>
+            <div th:if="${error}" class="alert alert-danger rounded-pill text-center" th:text="${error}"></div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Nombre Completo</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="u : ${listaUsuarios}">
+                            <td th:text="${u.idUsuario}" class="fw-bold">1</td>
+                            <td th:text="${u.username}">user</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img th:if="${u.perfil != null and u.perfil.avatar != null}" 
+                                         th:src="@{${u.perfil.avatar}}" 
+                                         class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+                                    <span th:text="${u.perfil != null ? u.perfil.nombre + ' ' + u.perfil.apellido : 'Sin perfil'}">Nombre</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span th:class="${u.rol.name() == 'ADMINISTRADOR' ? 'badge bg-danger' : 'badge bg-primary'}" 
+                                      th:text="${u.rol}">ROL</span>
+                            </td>
+                            <td>
+                                <span th:if="${u.estado}" class="text-success fw-bold"><i class="fas fa-check-circle"></i> Activo</span>
+                                <span th:unless="${u.estado}" class="text-danger fw-bold"><i class="fas fa-ban"></i> Inactivo</span>
+                            </td>
+                            <td>
+                                <a th:href="@{/admin/eliminar/{id}(id=${u.idUsuario})}" 
+                                   class="btn btn-outline-danger btn-sm rounded-circle"
+                                   onclick="return confirm('¿Estás seguro? Esta acción no se puede deshacer.');"
+                                   title="Eliminar Usuario">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

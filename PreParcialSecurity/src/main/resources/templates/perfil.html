@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Editar Perfil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Editar Información Personal</h4>
+                    </div>
+                    <div class="card-body">
+                        
+                        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+                        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                        <form th:action="@{/perfil/guardar}" method="post" enctype="multipart/form-data" th:object="${perfil}">
+                            
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label>Nombre</label>
+                                    <input type="text" th:field="*{nombre}" class="form-control" required>
+                                </div>
+                                <div class="col">
+                                    <label>Apellido</label>
+                                    <input type="text" th:field="*{apellido}" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Correo Electrónico</label>
+                                <input type="email" th:field="*{email}" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Fecha de Nacimiento</label>
+                                <input type="date" th:field="*{fechaNacimiento}" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Avatar (Imagen)</label>
+                                <input type="file" name="file" class="form-control" accept="image/*">
+                            </div>
+
+                            <hr>
+                            <h5 class="text-muted">Seguridad</h5>
+                            <div class="mb-3">
+                                <label>Nueva Contraseña (Dejar en blanco para mantener la actual)</label>
+                                <input type="password" name="newPassword" class="form-control" placeholder="********">
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/home}" class="btn btn-secondary">Cancelar</a>
+                                <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

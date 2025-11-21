@@ -1,0 +1,281 @@
+/* =========================================
+   1. ESTILO GENERAL Y FONDO ANIMADO
+   ========================================= */
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", "Segoe UI Emoji", sans-serif;
+    color: #333;
+    
+    /* Fondo animado */
+    background: linear-gradient(-45deg, #7eb4ff, #a674ff, #5dc8ff, #8d7aff);
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+    background-attachment: fixed;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* =========================================
+   2. LAYOUT PRINCIPAL Y NAVBAR
+   ========================================= */
+.vendedor-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.top-nav {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.nav-brand {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-welcome {
+    color: white;
+    font-size: 1rem;
+}
+
+.logout-link {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none; /* Asegura que no tenga subrayado si es <a> */
+}
+
+.logout-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    color: white;
+}
+
+/* =========================================
+   3. CONTENIDO Y DASHBOARD (Home)
+   ========================================= */
+.content {
+    flex: 1;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.welcome-section {
+    text-align: center;
+    margin-bottom: 40px;
+    color: white;
+}
+
+.welcome-section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.welcome-section p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Grid de Tarjetas */
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    justify-content: center;
+}
+
+/* Estilo Base de Tarjetas (Glassmorphism) */
+.action-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    text-decoration: none;
+    color: #444;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.action-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Iconos dentro de las tarjetas */
+.icon-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.icon-wrapper.sale {
+    background: linear-gradient(135deg, #4f9aff, #2979ff);
+    box-shadow: 0 5px 15px rgba(79, 154, 255, 0.4);
+}
+
+.icon-wrapper.stock {
+    background: linear-gradient(135deg, #a36bff, #7c4dff);
+    box-shadow: 0 5px 15px rgba(163, 107, 255, 0.4);
+}
+
+.icon-wrapper.history {
+    background: linear-gradient(135deg, #5dc8ff, #00b0ff);
+    box-shadow: 0 5px 15px rgba(93, 200, 255, 0.4);
+}
+
+.action-card h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.action-card p {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+/* =========================================
+   4. ESTILOS ESPECÍFICOS DEL PERFIL (NUEVO)
+   ========================================= */
+
+/* Tarjeta contenedora del formulario (Glass) */
+.profile-glass-card {
+    background: rgba(255, 255, 255, 0.9); /* Coincide con .action-card */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    margin-bottom: 30px;
+}
+
+/* Inputs personalizados */
+.form-control {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 10px 15px;
+}
+
+.form-control:focus {
+    background-color: #fff;
+    border-color: #a36bff; /* Color principal del tema */
+    box-shadow: 0 0 0 0.2rem rgba(163, 107, 255, 0.25);
+}
+
+/* Botones del tema */
+.btn-theme {
+    border-radius: 20px;
+    padding: 10px 25px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    border: none;
+    transition: transform 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #a36bff, #7c4dff);
+    color: white;
+}
+
+.btn-save:hover {
+    transform: translateY(-2px);
+    color: white;
+    box-shadow: 0 5px 15px rgba(163, 107, 255, 0.4);
+}
+
+.btn-cancel {
+    background: transparent;
+    border: 1px solid #a36bff;
+    color: #666;
+}
+
+.btn-cancel:hover {
+    background: rgba(163, 107, 255, 0.1);
+    color: #333;
+}
+
+.section-title {
+    color: #444;
+    font-weight: bold;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #a36bff;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+/* =========================================
+   5. RESPONSIVIDAD
+   ========================================= */
+@media (max-width: 768px) {
+    .top-nav {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .content {
+        padding: 20px;
+    }
+    
+    .welcome-section h2 {
+        font-size: 1.8rem;
+    }
+
+    .profile-glass-card {
+        padding: 25px; /* Menos padding en móviles */
+    }
+}
