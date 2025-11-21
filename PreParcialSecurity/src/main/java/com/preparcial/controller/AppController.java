@@ -6,7 +6,7 @@ import com.preparcial.model.Usuario;
 import com.preparcial.repository.UsuarioRepository;
 import com.preparcial.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat; // IMPORTANTE
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,7 +49,6 @@ public class AppController {
                                @RequestParam String nombre, 
                                @RequestParam String apellido,
                                @RequestParam String email,
-                               // Esta anotación asegura que la fecha se lea correctamente (yyyy-MM-dd)
                                @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaNacimiento,
                                @RequestParam(required = false) String rolSeleccionado,
                                RedirectAttributes redirectAttributes) {
@@ -83,15 +82,34 @@ public class AppController {
         }
     }
 
+    // --- MÉTODOS DE PERFIL MODIFICADOS ---
+
+    // 1. VISTA DE LECTURA (Muestra perfil.html)
     @GetMapping("/perfil")
+    public String verPerfil(Authentication auth, Model model) {
+        String username = auth.getName();
+        Usuario usuario = usuarioRepository.findByUsername(username).orElseThrow();
+        
+        model.addAttribute("usuario", usuario);
+        // Pasamos "perfil" también por comodidad en la vista
+        model.addAttribute("perfil", usuario.getPerfil());
+        
+        return "perfil"; // Retorna la vista de solo lectura
+    }
+
+    // 2. VISTA DE EDICIÓN (Muestra edit_perfil.html - antiguo perfil.html renombrado)
+    @GetMapping("/perfil/editar")
     public String editarPerfil(Authentication auth, Model model) {
         String username = auth.getName();
         Usuario usuario = usuarioRepository.findByUsername(username).orElseThrow();
+        
         model.addAttribute("usuario", usuario);
         model.addAttribute("perfil", usuario.getPerfil());
-        return "perfil";
+        
+        return "edit_perfil"; // Retorna el formulario de edición
     }
 
+    // 3. GUARDAR CAMBIOS (Redirige a lectura si sale bien, o vuelve a editar si falla)
     @PostMapping("/perfil/guardar")
     public String guardarPerfil(Authentication auth, 
                                 @ModelAttribute Perfil perfilForm,
@@ -102,13 +120,17 @@ public class AppController {
             String username = auth.getName();
             Usuario usuarioSesion = usuarioRepository.findByUsername(username).orElseThrow();
             usuarioService.actualizarPerfil(usuarioSesion, perfilForm, archivo, newPassword);
+            
             redirectAttributes.addFlashAttribute("success", "Perfil actualizado correctamente.");
-            return "redirect:/perfil";
+            return "redirect:/perfil"; // Éxito: vamos a la vista de lectura
+
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al actualizar.");
-            return "redirect:/perfil";
+            return "redirect:/perfil/editar"; // Error: volvemos al formulario
         }
     }
+
+    // --- ADMINISTRACIÓN DE USUARIOS ---
 
     @GetMapping("/admin/usuarios")
     public String administrarUsuarios(Model model) {

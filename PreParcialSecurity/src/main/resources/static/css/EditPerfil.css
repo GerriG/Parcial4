@@ -25,8 +25,8 @@ body {
    2. NAVBAR (Glassmorphism - Acrílico)
    ========================================= */
 .navbar-glass {
-    background: rgba(255, 255, 255, 0.1); /* Más transparente */
-    backdrop-filter: blur(15px);           /* Más desenfoque */
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -46,47 +46,54 @@ body {
     flex: 1;
     width: 100%;
     box-sizing: border-box;
+    /* Espaciado igual a Perfil.css */
+    padding-top: 40px; 
+    padding-bottom: 40px;
 }
 
 /* =========================================
-   4. TARJETA ACRÍLICA (Glassmorphism Extremo)
+   4. TARJETA ACRÍLICA (IGUAL A PERFIL)
    ========================================= */
 .profile-glass-card {
     /* Fondo mucho más transparente (25% opacidad) */
     background: rgba(255, 255, 255, 0.25);
     
-    /* Desenfoque intenso para el efecto "Hielo/Acrílico" */
+    /* Desenfoque intenso */
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     
-    border-radius: 20px;
-    padding: 40px;
+    border-radius: 25px; /* Aumentado a 25px para igualar Perfil */
+    
+    /* CAMBIO: Padding aumentado a 50px para igualar tamaño visual */
+    padding: 50px;
     
     /* Sombra suave pero difusa */
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
     
-    /* Borde blanco semitransparente para definir el límite */
+    /* Bordes de cristal */
     border: 1px solid rgba(255, 255, 255, 0.4);
-    
-    /* Borde superior izquierdo brillante para efecto de luz */
     border-top: 1px solid rgba(255, 255, 255, 0.7);
     border-left: 1px solid rgba(255, 255, 255, 0.7);
+
+    /* CAMBIO: Asegurar ancho completo para que no se vea "pequeño" */
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
 }
 
 /* TÍTULO INTERNO */
 .section-title {
-    color: #2c3e50; /* Un poco más oscuro para contraste sobre transparente */
+    color: #2c3e50;
     font-weight: 800;
     margin-bottom: 20px;
-    border-bottom: 3px solid rgba(163, 107, 255, 0.5); /* Subrayado también semi-transparente */
+    border-bottom: 3px solid rgba(163, 107, 255, 0.5);
     display: inline-block;
     padding-bottom: 5px;
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
 }
 
-/* Textos auxiliares (labels, smalls) */
 .text-muted {
-    color: #444 !important; /* Oscurecer para legibilidad */
+    color: #444 !important;
     font-weight: 500;
 }
 
@@ -94,7 +101,6 @@ body {
    5. INPUTS ACRÍLICOS
    ========================================= */
 .form-control {
-    /* Fondo semi-transparente (50%) */
     background-color: rgba(255, 255, 255, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 12px;
@@ -105,7 +111,7 @@ body {
 }
 
 .form-control:focus {
-    background-color: rgba(255, 255, 255, 0.85); /* Más opaco al escribir */
+    background-color: rgba(255, 255, 255, 0.85);
     border-color: #a36bff;
     box-shadow: 0 0 0 4px rgba(163, 107, 255, 0.15);
     outline: none;
@@ -131,7 +137,6 @@ body {
 
 /* Botón Guardar (Acrílico Morado) */
 .btn-save {
-    /* Gradiente con transparencia */
     background: linear-gradient(135deg, rgba(163, 107, 255, 0.7), rgba(124, 77, 255, 0.7));
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -148,23 +153,32 @@ body {
     color: white;
 }
 
-/* Botón Volver (Acrílico Blanco) */
-/* Sobrescribimos .btn-light de Bootstrap para que sea acrílico */
+/* === 7. BOTÓN TRANSPARENTE & ALERTA (SOLICITADO) === */
 .btn-light {
-    background: rgba(255, 255, 255, 0.3) !important;
+    background: rgba(255, 255, 255, 0.25) !important; /* Transparencia aplicada */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.5) !important;
     color: white !important;
-    font-weight: bold;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
+    padding: 10px 25px;
 }
 
 .btn-light:hover {
     background: rgba(255, 255, 255, 0.5) !important;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    color: #000 !important;
+}
+
+/* Alerta de éxito transparente */
+.alert-success {
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #155724;
 }
 
 /* Botón Cerrar Sesión (Navbar) */
@@ -179,39 +193,15 @@ body {
 }
 
 /* =========================================
-   7. RESPONSIVIDAD
-   ========================================= */
-@media (max-width: 768px) {
-    .content {
-        padding: 20px 15px;
-    }
-    .profile-glass-card {
-        padding: 25px; 
-        backdrop-filter: blur(15px); /* Menos blur en móviles para rendimiento */
-    }
-}
-
-/* ... (Mantén todo tu CSS anterior igual) ... */
-
-/* =========================================
-   8. NUEVO: CAJA DE PREVISUALIZACIÓN (Avatar)
+   8. CAJA DE PREVISUALIZACIÓN (Avatar)
    ========================================= */
 .glass-preview-box {
-    /* Fondo semi-transparente similar a los inputs */
     background: rgba(255, 255, 255, 0.4);
-    
-    /* Efecto borroso */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    
-    /* Bordes brillantes suaves */
     border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 15px;
-    
-    /* Sombra sutil */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    
-    /* Espaciado */
     padding: 15px;
     transition: all 0.3s ease;
 }
@@ -219,4 +209,25 @@ body {
 .glass-preview-box:hover {
     background: rgba(255, 255, 255, 0.6);
     transform: translateY(-2px);
+}
+
+/* =========================================
+   9. RESPONSIVIDAD (Sincronizada con Perfil)
+   ========================================= */
+/* Ajuste para Laptops (Igual que Perfil.css) */
+@media (max-width: 1440px) {
+    .profile-glass-card {
+        padding: 35px;
+    }
+}
+
+/* Ajuste para Móviles */
+@media (max-width: 768px) {
+    .content {
+        padding: 20px 15px;
+    }
+    .profile-glass-card {
+        padding: 25px; 
+        backdrop-filter: blur(15px);
+    }
 }
