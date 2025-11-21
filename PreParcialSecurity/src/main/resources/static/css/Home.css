@@ -7,10 +7,10 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    font-family: 'Montserrat', sans-serif; /* Fuente consistente con el login */
+    font-family: 'Montserrat', sans-serif;
     color: #333;
     
-    /* Fondo animado */
+    /* Fondo vibrante */
     background: linear-gradient(-45deg, #7eb4ff, #a674ff, #5dc8ff, #8d7aff);
     background-size: 400% 400%;
     animation: gradientMove 12s ease infinite;
@@ -24,13 +24,13 @@ body {
 }
 
 /* =========================================
-   2. NAVBAR (Adaptado a Glassmorphism)
+   2. NAVBAR (Acrílico)
    ========================================= */
 .navbar-glass {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     padding: 15px 0;
 }
@@ -41,18 +41,41 @@ body {
     text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
+.btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    font-weight: 600;
+}
+.btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: white;
+}
+
 /* =========================================
-   3. PANEL PRINCIPAL (Glass Panel)
+   3. PANEL PRINCIPAL (Glass Panel Acrílico)
    ========================================= */
 .glass-panel {
-    background: rgba(255, 255, 255, 0.85); /* Más opacidad para mejor lectura */
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    /* Fondo transparente (25%) para efecto acrílico */
+    background: rgba(255, 255, 255, 0.25);
+    
+    /* Desenfoque intenso */
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    
     border-radius: 25px;
     padding: 50px 40px;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    
+    /* SOLUCIÓN BUG ESQUINAS: Asegura que nada se salga del borde redondeado */
+    overflow: hidden; 
+    
+    /* Sombras y bordes de cristal */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.4);
-    margin-top: 80px; /* Espacio para el navbar fijo */
+    border-top: 1px solid rgba(255, 255, 255, 0.7);
+    border-left: 1px solid rgba(255, 255, 255, 0.7);
+    
+    margin-top: 80px; 
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     max-width: 100%;
@@ -60,14 +83,14 @@ body {
 
 .glass-panel:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 40px 0 rgba(31, 38, 135, 0.45);
+    box-shadow: 0 15px 40px 0 rgba(31, 38, 135, 0.3);
 }
 
 /* Imagen de Avatar */
 .avatar-container {
     position: relative;
-    width: 160px;
-    height: 160px;
+    width: 140px; /* Reducido ligeramente para mejor proporción */
+    height: 140px;
     margin: 0 auto 25px auto;
 }
 
@@ -76,71 +99,101 @@ body {
     height: 100%; 
     border-radius: 50%; 
     object-fit: cover; 
-    border: 5px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    border: 4px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
 }
 
 .glass-panel:hover .avatar-img {
     transform: scale(1.05);
-    border-color: #fff;
+    border-color: rgba(255, 255, 255, 0.9);
 }
 
 /* Textos */
 .user-name {
-    font-weight: 700;
+    font-weight: 800;
     color: #2c3e50;
     margin-bottom: 5px;
+    font-size: 2rem; /* Tamaño controlado */
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 .user-email {
-    color: #555;
-    font-size: 0.95rem;
-    margin-bottom: 20px;
-}
-
-/* Badge de Rol */
-.role-badge {
-    background: rgba(52, 73, 94, 0.8);
-    color: white;
-    padding: 8px 20px;
-    border-radius: 50px;
-    font-size: 0.85rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    color: #333;
+    font-weight: 500;
+    font-size: 1rem;
+    margin-bottom: 25px;
 }
 
 /* =========================================
-   4. BOTONES PERSONALIZADOS
+   4. BADGE DE ROL (Corrección de Bug)
+   ========================================= */
+.role-badge {
+    color: white;
+    padding: 10px 30px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    
+    /* IMPORTANTE: Quitamos backdrop-filter de aquí. 
+       Al tener un fondo casi opaco (0.9), el blur no se ve 
+       pero sí causa el error de recorte en las esquinas. */
+    backdrop-filter: none; 
+    -webkit-backdrop-filter: none;
+}
+
+/* Estilo Rojo para ADMIN */
+.badge-admin {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.95), rgba(255, 71, 87, 0.95));
+    box-shadow: 0 4px 20px rgba(255, 71, 87, 0.4);
+}
+
+/* Estilo Azul para USUARIO */
+.badge-user {
+    background: linear-gradient(135deg, rgba(79, 154, 255, 0.95), rgba(55, 66, 250, 0.95));
+    box-shadow: 0 4px 20px rgba(55, 66, 250, 0.4);
+}
+
+/* =========================================
+   5. BOTONES PERSONALIZADOS
    ========================================= */
 .btn-custom {
     border-radius: 50px;
     padding: 12px 35px;
     font-weight: 700;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     color: white;
     margin: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 10px;
+    
+    /* Aquí sí dejamos el blur porque son más transparentes */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 }
 
 .btn-profile { 
-    background: linear-gradient(to right, #7eb4ff, #4f9aff); 
+    background: linear-gradient(to right, rgba(126, 180, 255, 0.85), rgba(79, 154, 255, 0.85)); 
 }
 
 .btn-admin { 
-    background: linear-gradient(to right, #a36bff, #8d7aff); 
+    background: linear-gradient(to right, rgba(163, 107, 255, 0.85), rgba(141, 119, 255, 0.85)); 
 }
 
 .btn-custom:hover { 
     transform: translateY(-3px) scale(1.02); 
     color: white; 
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3); 
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    background-color: rgba(255,255,255,0.1); 
 }
 
 /* Responsividad */
