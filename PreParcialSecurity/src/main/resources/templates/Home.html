@@ -44,8 +44,9 @@
                              class="avatar-img" alt="Avatar de usuario">
                              
                         <img th:if="${usuario.perfil.avatar == null}" 
-                             src="https://via.placeholder.com/160?text=Sin+Foto" 
-                             class="avatar-img" alt="Avatar por defecto">
+                             th:src="@{/Profiles/default.jpg}" 
+                             class="avatar-img" 
+                             alt="Avatar por defecto">
                     </div>
                     
                     <h2 class="user-name">

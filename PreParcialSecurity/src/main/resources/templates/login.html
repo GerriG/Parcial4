@@ -13,26 +13,28 @@
         <div class="form-container sign-up-container">
             <form th:action="@{/register}" method="post">
                 <h1>Crear Cuenta</h1>
-                
                 <div class="social-container">
-                    <i class="fas fa-user-circle fa-2x"></i>
+                    <a href="#" class="social"><i class="fas fa-user-circle"></i></a>
                 </div>
-                <span>Ingresa tus datos para registrarte</span>
+                <span>Usa tu correo para registrarte</span>
                 
                 <input type="text" name="nombre" placeholder="Nombre" required />
                 <input type="text" name="apellido" placeholder="Apellido" required />
-                <input type="email" name="email" placeholder="Correo Electrónico" required />
+                <input type="email" name="email" placeholder="Email" required />
                 
-                <label style="width: 100%; text-align: left; font-size: 12px; color: #666; margin-top: 5px;">Fecha de Nacimiento:</label>
-                <input type="date" name="fechaNacimiento" required />
-                
-                <input type="text" name="username" placeholder="Usuario" required />
+                <div class="input-row">
+                    <input type="date" name="fechaNacimiento" required title="Fecha de Nacimiento" />
+                    <input type="text" name="username" placeholder="Usuario" required />
+                </div>
+
                 <input type="password" name="password" placeholder="Contraseña" required />
 
-                <select name="rolSeleccionado" required>
-                    <option value="USUARIO">Usuario</option>
-                    <option value="ADMINISTRADOR">Administrador</option>
-                </select>
+                <div class="select-container">
+                    <select name="rolSeleccionado" required>
+                        <option value="USUARIO">Usuario</option>
+                        <option value="ADMINISTRADOR">Administrador</option>
+                    </select>
+                </div>
 
                 <button type="submit">Registrarse</button>
             </form>
@@ -41,23 +43,22 @@
         <div class="form-container sign-in-container">
             <form th:action="@{/login}" method="post">
                 <h1>Iniciar Sesión</h1>
-                
                 <div class="social-container">
-                    <i class="fas fa-lock fa-2x"></i>
+                    <a href="#" class="social"><i class="fas fa-lock"></i></a>
                 </div>
-                <span>Usa tu cuenta registrada</span>
+                <span>o usa tu cuenta</span>
                 
-                <div th:if="${param.error} and ${error == null}" class="alert error">
-                    Credenciales incorrectas. Intente de nuevo.
+                <div th:if="${param.error} and ${error == null}" class="alert-compact error">
+                    <i class="fas fa-exclamation-circle"></i> Datos incorrectos
                 </div>
-                <div th:if="${error}" class="alert error" th:text="${error}"></div>
-                <div th:if="${success}" class="alert success" th:text="${success}"></div>
-                <div th:if="${param.logout}" class="alert success">Sesión cerrada correctamente.</div>
+                <div th:if="${error}" class="alert-compact error" th:text="${error}"></div>
+                <div th:if="${success}" class="alert-compact success" th:text="${success}"></div>
+                <div th:if="${param.logout}" class="alert-compact success">Sesión cerrada</div>
 
                 <input type="text" name="username" placeholder="Usuario" required />
                 <input type="password" name="password" placeholder="Contraseña" required />
                 
-                <a href="#">¿Olvidaste tu contraseña?</a>
+                <a href="#" class="forgot-pass">¿Olvidaste tu contraseña?</a>
                 <button type="submit">Ingresar</button>
             </form>
         </div>
@@ -65,13 +66,13 @@
         <div class="overlay-container">
             <div class="overlay">
                 <div class="overlay-panel overlay-left">
-                    <h1>¡Bienvenido de nuevo!</h1>
-                    <p>Para mantenerte conectado con nosotros, inicia sesión con tu información personal</p>
+                    <h1>¡Bienvenido!</h1>
+                    <p>Para mantenerte conectado, inicia sesión con tus datos personales</p>
                     <button class="ghost" id="signIn">Iniciar Sesión</button>
                 </div>
                 <div class="overlay-panel overlay-right">
                     <h1>¡Hola, Amigo!</h1>
-                    <p>Ingresa tus datos personales y comienza tu viaje con SecurityApp</p>
+                    <p>Ingresa tus datos y comienza tu viaje con SecurityApp</p>
                     <button class="ghost" id="signUp">Registrarse</button>
                 </div>
             </div>
