@@ -4,7 +4,81 @@
     <title>Gestión de Usuarios</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <link rel="stylesheet" th:href="@{/css/Admin.css}">
+
+    <style>
+        /* 1. Contenedor Principal del Modal (Efecto Cristal) */
+        .swal2-popup {
+            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.25) !important; 
+            border-radius: 20px !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3) !important;
+            /* CAMBIO: Texto base blanco */
+            color: #ffffff !important; 
+        }
+        
+        /* 2. Títulos y Contenido */
+        .swal2-title {
+            /* CAMBIO: Título blanco */
+            color: #ffffff !important;
+            font-weight: 800 !important;
+        }
+
+        /* CAMBIO: Asegura que el texto del cuerpo (mensaje) sea blanco */
+        .swal2-html-container {
+            color: #ffffff !important;
+        }
+
+        /* 3. Botón de Confirmación */
+        .swal2-styled.swal2-confirm {
+            background: linear-gradient(135deg, #a36bff, #7c4dff) !important; 
+            color: white !important;
+            border-radius: 25px !important;
+            font-weight: 700 !important;
+            padding: 10px 25px !important;
+            border: none !important;
+            box-shadow: 0 4px 15px rgba(163, 107, 255, 0.4) !important;
+        }
+
+        .swal2-styled.swal2-confirm:hover {
+            background: linear-gradient(135deg, #7c4dff, #6230e7) !important;
+        }
+
+        /* 4. Botón de Cancelación */
+        .swal2-styled.swal2-cancel {
+            background: rgba(255, 255, 255, 0.3) !important; 
+            backdrop-filter: blur(8px) !important;
+            /* CAMBIO: Texto blanco en botón cancelar */
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.6) !important;
+            border-radius: 25px !important;
+            font-weight: 600 !important;
+            padding: 10px 25px !important;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+        }
+        
+        .swal2-styled.swal2-cancel:hover {
+            background: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        /* --- CORRECCIÓN PARA EL ICONO (Eliminar capa transparente) --- */
+        /* 5. Corrección Iconos Animados en fondo transparente */
+        .swal2-icon, 
+        .swal2-success-fix, 
+        .swal2-success-circular-line-left, 
+        .swal2-success-circular-line-right {
+            background-color: transparent !important;
+        }
+        
+        /* Opcional: Si el anillo se ve mal, fuerza transparencia también */
+        .swal2-success-ring {
+            background-color: transparent !important; 
+        }
+    </style>
 </head>
 <body>
 
@@ -39,16 +113,10 @@
             </div>
 
             <div class="glass-container">
-                <div th:if="${success}" class="alert alert-success rounded-pill text-center mb-4">
-                    <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
-                </div>
-                <div th:if="${error}" class="alert alert-danger rounded-pill text-center mb-4">
-                    <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
-                </div>
-
+                
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
-                        <thead>
+                        <thead class="text-center">
                             <tr>
                                 <th>ID</th>
                                 <th>Usuario</th>
@@ -67,7 +135,7 @@
                                         <img th:if="${u.perfil != null and u.perfil.avatar != null}" 
                                              th:src="@{${u.perfil.avatar}}" 
                                              class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
-                                        
+                                             
                                         <img th:if="${u.perfil == null or u.perfil.avatar == null}" 
                                              th:src="@{/Profiles/default.jpg}" 
                                              class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
@@ -89,9 +157,9 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a th:href="@{/admin/eliminar/{id}(id=${u.idUsuario})}" 
-                                       class="btn btn-outline-danger btn-sm rounded-circle"
-                                       onclick="return confirm('¿Estás seguro? Esta acción no se puede deshacer.');"
+                                    <a href="javascript:void(0);" 
+                                       th:attr="data-id=${u.idUsuario}"
+                                       class="btn btn-outline-danger btn-sm rounded-circle delete-btn"
                                        title="Eliminar Usuario">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
@@ -105,5 +173,60 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener('DOMContentLoaded', function() {
+            var msgError = /*[[${error}]]*/ null;
+            var msgSuccess = /*[[${success}]]*/ null;
+            
+            const swalTheme = {
+                confirmButtonColor: '#a36bff',
+                background: 'transparent', 
+                backdrop: `rgba(0,0,0,0.4)`
+            };
+
+            // 1. Mostrar mensajes de éxito/error del controlador
+            if(msgSuccess){
+                Swal.fire({
+                    ...swalTheme,
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: msgSuccess
+                });
+            } else if(msgError){
+                Swal.fire({
+                    ...swalTheme,
+                    icon: 'error',
+                    title: 'Error de Gestión',
+                    text: msgError
+                });
+            } 
+
+            // 2. Manejar la confirmación de eliminación
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = this.getAttribute('data-id');
+                    const deleteUrl = '/admin/eliminar/' + userId;
+
+                    Swal.fire({
+                        ...swalTheme,
+                        title: '¿Estás seguro?',
+                        text: "¡No podrás revertir esta acción!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = deleteUrl;
+                        }
+                    });
+                });
+            });
+        });
+        /*]]>*/
+    </script>
 </body>
 </html>

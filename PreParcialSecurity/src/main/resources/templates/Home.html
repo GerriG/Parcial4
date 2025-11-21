@@ -34,16 +34,17 @@
 
     <div class="container">
         <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
-            <div class="col-lg-8 col-md-10">
+            <div class="col-lg-10 col-md-10">
                 
                 <div class="glass-panel">
                     
                     <div class="avatar-container">
-                        <img th:if="${usuario.perfil.avatar != null}" 
+                        <!-- Imagen de perfil o imagen por defecto -->
+                        <img th:if="${usuario.perfil?.avatar != null}" 
                              th:src="@{${usuario.perfil.avatar}}" 
                              class="avatar-img" alt="Avatar de usuario">
                              
-                        <img th:if="${usuario.perfil.avatar == null}" 
+                        <img th:if="${usuario.perfil?.avatar == null}" 
                              th:src="@{/Profiles/default.jpg}" 
                              class="avatar-img" 
                              alt="Avatar por defecto">
@@ -56,21 +57,37 @@
                     <p class="user-email" th:text="${usuario.perfil.email} ?: 'Correo no registrado'"></p>
                     
                     <span class="role-badge" 
-                          th:classappend="${usuario.rol.name() == 'ADMINISTRADOR' ? 'badge-admin' : 'badge-user'}"
+                          th:classappend="${usuario.rol?.name() == 'ADMINISTRADOR' ? 'badge-admin' : 'badge-user'}"
                           th:text="${usuario.rol}">ROL</span>
 
                     <hr class="my-4 w-75 mx-auto opacity-25">
+                    
+                    <!-- CAMBIO: Contenedor ROW para dividir en 3 columnas -->
+                    <div class="row justify-content-center g-3"> 
+                        
+                        <!-- Columna 1: Ver Perfil -->
+                        <div class="col-12 col-lg-4 d-flex justify-content-center">
+                            <a th:href="@{/perfil}" class="btn btn-custom btn-profile w-100">
+                                <i class="fas fa-id-card-alt"></i> Ver mi Perfil
+                            </a>
+                        </div>
 
-                    <div class="d-flex justify-content-center flex-wrap">
-                        <a th:href="@{/perfil}" class="btn btn-custom btn-profile">
-                            <i class="fas fa-id-card-alt"></i> Ver mi Perfil
-                        </a>
+                        <!-- Columna 2: Editar Perfil -->
+                        <div class="col-12 col-lg-4 d-flex justify-content-center">
+                            <a th:href="@{/perfil/editar}" class="btn btn-custom btn-profile w-100">
+                                <i class="fas fa-user-edit"></i> Editar Perfil
+                            </a>
+                        </div>
 
-                        <a th:href="@{/admin/usuarios}" class="btn btn-custom btn-admin" 
-                           sec:authorize="hasRole('ADMINISTRADOR')">
-                            <i class="fas fa-users-cog"></i> Administrar Cuentas
-                        </a>
+                        <!-- Columna 3: Administrar (Solo Admin) -->
+                        <div class="col-12 col-lg-4 d-flex justify-content-center"
+                             sec:authorize="hasRole('ADMINISTRADOR')">
+                            <a th:href="@{/admin/usuarios}" class="btn btn-custom btn-admin w-100">
+                                <i class="fas fa-users-cog"></i> Administrar Cuentas
+                            </a>
+                        </div>
                     </div>
+                    <!-- FIN DEL CAMBIO -->
                 </div>
 
             </div>

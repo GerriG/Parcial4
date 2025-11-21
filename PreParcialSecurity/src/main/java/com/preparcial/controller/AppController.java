@@ -120,7 +120,7 @@ public class AppController {
             String username = auth.getName();
             Usuario usuarioSesion = usuarioRepository.findByUsername(username).orElseThrow();
             usuarioService.actualizarPerfil(usuarioSesion, perfilForm, archivo, newPassword);
-            
+
             redirectAttributes.addFlashAttribute("success", "Perfil actualizado correctamente.");
             return "redirect:/perfil"; // Éxito: vamos a la vista de lectura
 
@@ -131,7 +131,6 @@ public class AppController {
     }
 
     // --- ADMINISTRACIÓN DE USUARIOS ---
-
     @GetMapping("/admin/usuarios")
     public String administrarUsuarios(Model model) {
         model.addAttribute("listaUsuarios", usuarioRepository.findAll());
@@ -141,11 +140,26 @@ public class AppController {
     @GetMapping("/admin/eliminar/{id}")
     public String eliminarUsuario(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
+            // 1. Verificamos si el usuario existe antes de intentar borrarlo
+            if (!usuarioRepository.existsById(id)) {
+                redirectAttributes.addFlashAttribute("error", "El usuario con ID " + id + " no existe.");
+                return "redirect:/admin/usuarios";
+            }
+
+            // 2. Intentamos eliminar (Gracias al ON DELETE CASCADE de la BD, el perfil se irá solo)
             usuarioRepository.deleteById(id);
-            redirectAttributes.addFlashAttribute("success", "Usuario eliminado correctamente.");
+
+            redirectAttributes.addFlashAttribute("success", "Usuario y sus datos asociados eliminados correctamente.");
+
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "No se pudo eliminar el usuario.");
+            // 3. IMPORTANTE: Imprimir el error real en la consola del servidor para que tú lo veas
+            System.err.println("ERROR AL ELIMINAR USUARIO: " + e.getMessage());
+            e.printStackTrace();
+
+            // 4. Mostrar un mensaje más descriptivo al usuario (opcional, o dejar el genérico)
+            redirectAttributes.addFlashAttribute("error", "Error crítico al eliminar: " + e.getMessage());
         }
+
         return "redirect:/admin/usuarios";
     }
 }

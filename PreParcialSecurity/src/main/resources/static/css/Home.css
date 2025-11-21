@@ -52,7 +52,6 @@ body {
 
 /* =========================================
    3. PANEL PRINCIPAL (Base: 1366x768)
-   Este es el diseño original que funciona bien en laptops
    ========================================= */
 .glass-panel {
     background: rgba(255, 255, 255, 0.25);
@@ -60,9 +59,8 @@ body {
     -webkit-backdrop-filter: blur(25px);
     
     border-radius: 25px;
-    padding: 50px 40px; /* Padding original */
+    padding: 50px 40px; 
     
-    /* Corrección bug esquinas */
     overflow: hidden; 
     
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
@@ -84,7 +82,7 @@ body {
 /* Imagen de Avatar (Tamaño Base) */
 .avatar-container {
     position: relative;
-    width: 140px; /* Tamaño original */
+    width: 140px;
     height: 140px;
     margin: 0 auto 25px auto;
 }
@@ -109,7 +107,7 @@ body {
     font-weight: 800;
     color: #2c3e50;
     margin-bottom: 5px;
-    font-size: 2rem; /* Tamaño original */
+    font-size: 2rem;
     text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
@@ -121,7 +119,7 @@ body {
 }
 
 /* =========================================
-   4. BADGE DE ROL (Corrección Bug)
+   4. BADGE DE ROL
    ========================================= */
 .role-badge {
     color: white;
@@ -134,7 +132,7 @@ body {
     box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     border: 1px solid rgba(255, 255, 255, 0.3);
     text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    backdrop-filter: none; 
+    backdrop-filter: none;
     -webkit-backdrop-filter: none;
 }
 
@@ -149,23 +147,33 @@ body {
 }
 
 /* =========================================
-   5. BOTONES PERSONALIZADOS
+   5. BOTONES PERSONALIZADOS (3 en fila)
    ========================================= */
 .btn-custom {
     border-radius: 50px;
-    padding: 12px 35px;
+    
+    /* Ajustes para la nueva distribución */
+    padding: 12px 20px; 
     font-weight: 700;
     border: 1px solid rgba(255, 255, 255, 0.3);
     color: white;
-    margin: 15px;
+    
+    /* CAMBIO CLAVE: Quitamos el margin fijo */
+    margin: 0; 
+    
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
     text-decoration: none;
-    display: inline-flex;
+    
+    /* Flexbox para centrar y alinear icono/texto */
+    display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
+    
+    /* La clase w-100 en HTML hará que ocupe toda la columna */
 }
 
 .btn-profile { 
@@ -185,13 +193,12 @@ body {
 
 /* =========================================
    6. MEDIA QUERY: PANTALLAS GRANDES (1080p+)
-   Se activa SOLO si la pantalla es mayor a 1400px
    ========================================= */
 @media (min-width: 1400px) {
     /* Aumentamos el panel y controlamos su ancho */
     .glass-panel {
         padding: 70px 50px;
-        max-width: 850px;
+        max-width: 1000px; /* Aumentado para dar espacio a los 3 botones */
         margin-left: auto;
         margin-right: auto;
         margin-top: 100px;
@@ -211,7 +218,7 @@ body {
 
     /* Botones más grandes */
     .btn-custom {
-        padding: 15px 45px;
+        padding: 15px 30px; /* El padding lateral es menos importante ahora */
         font-size: 1.1rem;
         gap: 12px;
     }
@@ -231,9 +238,11 @@ body {
         margin-top: 100px;
     }
     
+    /* Los botones vuelven a ocupar el 100% de ancho en móvil */
     .btn-custom {
         width: 100%;
-        margin: 10px 0;
-        justify-content: center;
+        margin: 0;
     }
+    
+    /* El sistema de rejilla (col-12) ya maneja el apilamiento vertical */
 }

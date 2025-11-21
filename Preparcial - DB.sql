@@ -9,6 +9,7 @@ CREATE DATABASE IF NOT EXISTS `preparcial_security_db` DEFAULT CHARACTER SET utf
 USE `preparcial_security_db`;
 
 -- 2. Limpieza previa
+-- Mantenemos esto para asegurar que si existe el trigger viejo, se elimine.
 DROP TRIGGER IF EXISTS `borrar_usuario_al_borrar_perfil`;
 DROP TABLE IF EXISTS `perfiles`;
 DROP TABLE IF EXISTS `usuarios`;
@@ -36,6 +37,7 @@ CREATE TABLE `perfiles` (
   `usuario_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id_perfil`),
   UNIQUE KEY `usuario_id` (`usuario_id`),
+  -- Esta línea es la que hace la magia: Si borras Usuario, se borra Perfil automáticamente.
   CONSTRAINT `fk_perfil_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -48,15 +50,5 @@ INSERT INTO `usuarios` (`id_usuario`, `username`, `password`, `rol`, `estado`, `
 INSERT INTO `perfiles` (`id_perfil`, `nombre`, `apellido`, `email`, `fecha_nacimiento`, `avatar`, `usuario_id`) VALUES
 (1, 'Admin', 'Admin', 'admin@admin.com', '2005-04-17', '/uploads/5ba7a251-99eb-497c-bf95-42e1f976b401_133969316527262984.jpg', 1),
 (2, 'Usuario', 'Usuario', 'Usuario@Usuario.com', '2012-12-12', '/uploads/6e43e288-6b77-48dc-a3bc-75eb8433ca58_133817347908392708_1366_768.jpg', 2);
-
--- 7. Crear Trigger (Borrado Viceversa)
-DELIMITER $$
-CREATE TRIGGER `borrar_usuario_al_borrar_perfil` 
-AFTER DELETE ON `perfiles` 
-FOR EACH ROW 
-BEGIN
-    DELETE FROM `usuarios` WHERE `id_usuario` = OLD.usuario_id;
-END$$
-DELIMITER ;
 
 COMMIT;
