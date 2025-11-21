@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,800');
+
+/* =========================================
+   1. ESTILO GENERAL Y FONDO ANIMADO
+   ========================================= */
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Montserrat', sans-serif; /* Fuente consistente con el login */
+    color: #333;
+    
+    /* Fondo animado */
+    background: linear-gradient(-45deg, #7eb4ff, #a674ff, #5dc8ff, #8d7aff);
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+    background-attachment: fixed;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* =========================================
+   2. NAVBAR (Adaptado a Glassmorphism)
+   ========================================= */
+.navbar-glass {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* =========================================
+   3. PANEL PRINCIPAL (Glass Panel)
+   ========================================= */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.85); /* Más opacidad para mejor lectura */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 25px;
+    padding: 50px 40px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    margin-top: 80px; /* Espacio para el navbar fijo */
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 100%;
+}
+
+.glass-panel:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px 0 rgba(31, 38, 135, 0.45);
+}
+
+/* Imagen de Avatar */
+.avatar-container {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 25px auto;
+}
+
+.avatar-img { 
+    width: 100%; 
+    height: 100%; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    border: 5px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+.glass-panel:hover .avatar-img {
+    transform: scale(1.05);
+    border-color: #fff;
+}
+
+/* Textos */
+.user-name {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.user-email {
+    color: #555;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+/* Badge de Rol */
+.role-badge {
+    background: rgba(52, 73, 94, 0.8);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* =========================================
+   4. BOTONES PERSONALIZADOS
+   ========================================= */
+.btn-custom {
+    border-radius: 50px;
+    padding: 12px 35px;
+    font-weight: 700;
+    border: none;
+    color: white;
+    margin: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-profile { 
+    background: linear-gradient(to right, #7eb4ff, #4f9aff); 
+}
+
+.btn-admin { 
+    background: linear-gradient(to right, #a36bff, #8d7aff); 
+}
+
+.btn-custom:hover { 
+    transform: translateY(-3px) scale(1.02); 
+    color: white; 
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3); 
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .glass-panel {
+        padding: 30px 20px;
+        margin-top: 100px;
+    }
+    
+    .btn-custom {
+        width: 100%;
+        margin: 10px 0;
+        justify-content: center;
+    }
+}
