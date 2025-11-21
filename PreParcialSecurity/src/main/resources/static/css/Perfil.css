@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,800');
 /* =========================================
    1. ESTILO GENERAL Y FONDO ANIMADO
    ========================================= */
@@ -20,7 +21,25 @@ body {
 }
 
 /* =========================================
-   2. LAYOUT
+   2. NAVBAR (Adaptado a Glassmorphism)
+   ========================================= */
+.navbar-glass {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* =========================================
+   3. LAYOUT
    ========================================= */
 .content {
     flex: 1;
@@ -29,7 +48,7 @@ body {
 }
 
 /* =========================================
-   3. ESTILOS DE LA TARJETA (GLASSMORPHISM)
+   4. ESTILOS DE LA TARJETA (GLASSMORPHISM)
    ========================================= */
 .profile-glass-card {
     background: rgba(255, 255, 255, 0.95);
@@ -52,7 +71,7 @@ body {
 }
 
 /* =========================================
-   4. FORMULARIO Y CONTROLES
+   5. FORMULARIO Y CONTROLES
    ========================================= */
 .form-control {
     background-color: rgba(255, 255, 255, 0.8);
@@ -69,7 +88,7 @@ body {
 }
 
 /* =========================================
-   5. BOTONES
+   6. BOTONES
    ========================================= */
 .btn-theme {
     border-radius: 20px;
@@ -107,7 +126,7 @@ body {
 }
 
 /* =========================================
-   6. RESPONSIVIDAD
+   7. RESPONSIVIDAD
    ========================================= */
 @media (max-width: 768px) {
     .content {
