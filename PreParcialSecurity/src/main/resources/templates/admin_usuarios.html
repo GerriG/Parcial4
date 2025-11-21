@@ -68,19 +68,17 @@
                                              th:src="@{${u.perfil.avatar}}" 
                                              class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
                                         
-                                        <div th:if="${u.perfil == null or u.perfil.avatar == null}" 
-                                             class="rounded-circle me-2 bg-light d-flex justify-content-center align-items-center" 
-                                             style="width: 40px; height: 40px;">
-                                            <i class="fas fa-user text-secondary"></i>
-                                        </div>
+                                        <img th:if="${u.perfil == null or u.perfil.avatar == null}" 
+                                             th:src="@{/Profiles/default.jpg}" 
+                                             class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
 
                                         <span th:text="${u.perfil != null ? u.perfil.nombre + ' ' + u.perfil.apellido : 'Sin perfil'}">Nombre</span>
                                     </div>
                                 </td>
 
                                 <td>
-                                    <span th:class="${u.rol.name() == 'ADMINISTRADOR' ? 'badge bg-danger' : 'badge bg-primary'}" 
-                                          th:text="${u.rol}">ROL</span>
+                                    <span th:class="${u.rol?.name() == 'ADMINISTRADOR' ? 'badge bg-danger' : (u.rol != null ? 'badge bg-primary' : 'badge bg-secondary')}" 
+                                          th:text="${u.rol != null ? u.rol : 'Sin Rol'}">ROL</span>
                                 </td>
                                 <td>
                                     <span th:if="${u.estado}" class="text-success fw-bold" style="text-shadow: 0 0 10px rgba(255,255,255,0.8);">
