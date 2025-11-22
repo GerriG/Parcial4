@@ -48,9 +48,14 @@
                 </div>
                 <span>o usa tu cuenta</span>
                 
-                <div th:if="${param.error} and ${error == null}" class="alert-compact error">
+                <div th:if="${param.error} and ${error == null} and ${param.disabled == null}" class="alert-compact error">
                     <i class="fas fa-exclamation-circle"></i> Datos incorrectos
                 </div>
+
+                <div th:if="${param.disabled}" class="alert-compact error" style="border-color: #ffbb33; background-color: #fff8e1; color: #856404;">
+                    <i class="fas fa-user-slash"></i> Tu cuenta ha sido deshabilitada por un administrador.
+                </div>
+                
                 <div th:if="${error}" class="alert-compact error" th:text="${error}"></div>
                 <div th:if="${success}" class="alert-compact success" th:text="${success}"></div>
                 <div th:if="${param.logout}" class="alert-compact success">Sesión cerrada</div>
