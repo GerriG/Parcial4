@@ -36,8 +36,14 @@
                 border: 1px solid rgba(255, 255, 255, 0.6) !important;
                 border-radius: 25px !important;
             }
-            /* Iconos transparentes */
-            .swal2-icon, .swal2-success-ring {
+
+            /* === CORRECCIÓN ICONO: ELIMINAR LA CAPA BLANCA === */
+            /* Esto hace transparente la "tapa" que usa la animación y el anillo */
+            .swal2-icon,
+            .swal2-success-ring,
+            .swal2-success-fix,
+            .swal2-success-circular-line-left,
+            .swal2-success-circular-line-right {
                 background-color: transparent !important;
             }
         </style>

@@ -24,7 +24,7 @@ public class UsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // CORRECCIÓN: Apuntar a 'Profiles' para coincidir con WebConfig
+    // Directorio físico donde se guardan las imágenes
     private final String UPLOAD_DIR = "src/main/resources/static/Profiles/";
 
     public void registrarUsuario(Usuario usuario, Perfil perfil) {
@@ -57,18 +57,42 @@ public class UsuarioService {
             perfilBD.setEmail(datosFormulario.getEmail());
         }
 
-        // Actualizar fecha solo si el usuario seleccionó una nueva
         if (datosFormulario.getFechaNacimiento() != null) {
             perfilBD.setFechaNacimiento(datosFormulario.getFechaNacimiento());
         }
 
-        // 3. Actualizar contraseña (solo si se escribió una nueva)
+        // 3. Actualizar contraseña
         if (nuevoPassword != null && !nuevoPassword.isEmpty()) {
             usuarioBD.setPassword(passwordEncoder.encode(nuevoPassword));
         }
 
-        // 4. Manejo de Imagen
+        // 4. Manejo de Imagen (AQUÍ ESTÁ LA LÓGICA DE BORRADO)
         if (!archivoAvatar.isEmpty()) {
+            
+            // --- NUEVO BLOQUE: BORRAR IMAGEN ANTERIOR ---
+            String avatarAnteriorUrl = perfilBD.getAvatar();
+            
+            // Solo intentamos borrar si hay algo guardado y no es nulo
+            if (avatarAnteriorUrl != null && !avatarAnteriorUrl.isEmpty()) {
+                try {
+                    // La BD guarda la ruta web: "/uploads/nombre_archivo.jpg"
+                    // Necesitamos quitar "/uploads/" para obtener solo "nombre_archivo.jpg"
+                    String nombreArchivoAnterior = avatarAnteriorUrl.replace("/uploads/", "");
+                    
+                    // Construimos la ruta física completa
+                    Path rutaArchivoAnterior = Paths.get(UPLOAD_DIR).resolve(nombreArchivoAnterior);
+                    
+                    // Borramos el archivo si existe en la carpeta
+                    Files.deleteIfExists(rutaArchivoAnterior);
+                    
+                } catch (IOException e) {
+                    // Imprimimos el error en consola para saber si falló, pero dejamos que el flujo continúe
+                    System.err.println("No se pudo borrar la imagen anterior: " + e.getMessage());
+                }
+            }
+            // --------------------------------------------
+
+            // Lógica de guardado de la NUEVA imagen
             Path rutaDirectorio = Paths.get(UPLOAD_DIR);
             if (!Files.exists(rutaDirectorio)) {
                 Files.createDirectories(rutaDirectorio);
@@ -77,10 +101,8 @@ public class UsuarioService {
             String nombreArchivo = UUID.randomUUID().toString() + "_" + archivoAvatar.getOriginalFilename();
             Path rutaArchivo = rutaDirectorio.resolve(nombreArchivo);
             
-            // Guardar físicamente en la carpeta 'Profiles'
             Files.write(rutaArchivo, archivoAvatar.getBytes());
             
-            // Guardar la ruta URL en la BD (WebConfig mapea /uploads/** -> carpeta Profiles)
             perfilBD.setAvatar("/uploads/" + nombreArchivo);
         }
 
