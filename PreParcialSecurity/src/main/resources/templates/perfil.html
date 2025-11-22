@@ -1,66 +1,182 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Editar Perfil</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-    <div class="container mt-5 mb-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">Editar Información Personal</h4>
+    <head>
+        <title>Mi Perfil</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <link rel="stylesheet" th:href="@{/css/Home.css}">
+        <link rel="stylesheet" th:href="@{/css/Perfil.css}">
+
+        <style>
+            /* Estilos específicos para SweetAlert Glassmorphism */
+            .swal2-popup {
+                backdrop-filter: blur(15px);
+                background: rgba(255, 255, 255, 0.25) !important;
+                border-radius: 20px !important;
+                border: 1px solid rgba(255, 255, 255, 0.4) !important;
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3) !important;
+                color: #ffffff !important;
+            }
+            .swal2-title, .swal2-html-container {
+                color: #ffffff !important;
+                font-weight: 800 !important;
+            }
+            .swal2-styled.swal2-confirm {
+                background: linear-gradient(135deg, #a36bff, #7c4dff) !important;
+                color: white !important;
+                border-radius: 25px !important;
+                border: none !important;
+                box-shadow: 0 4px 15px rgba(163, 107, 255, 0.4) !important;
+            }
+            .swal2-styled.swal2-cancel {
+                background: rgba(255, 255, 255, 0.3) !important;
+                color: #ffffff !important;
+                border: 1px solid rgba(255, 255, 255, 0.6) !important;
+                border-radius: 25px !important;
+            }
+
+            /* === CORRECCIÓN ICONO: ELIMINAR LA CAPA BLANCA === */
+            /* Esto hace transparente la "tapa" que usa la animación y el anillo */
+            .swal2-icon,
+            .swal2-success-ring,
+            .swal2-success-fix,
+            .swal2-success-circular-line-left,
+            .swal2-success-circular-line-right {
+                background-color: transparent !important;
+            }
+        </style>
+    </head>
+    <body>
+
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-glass fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="/home">
+                    <i class="fas fa-shield-alt me-2"></i> SecurityApp
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <form th:action="@{/logout}" method="post" class="d-flex mt-3 mt-lg-0">
+                        <button class="btn btn-outline-light rounded-pill px-4 fw-bold w-100" type="submit">
+                            <i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+
+        <div class="content py-5" style="margin-top: 60px;">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="fw-bold text-white mb-0" style="text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                                <i class="fas fa-id-card"></i> Mi Perfil
+                            </h2>
+                            <a th:href="@{/home}" class="btn btn-light rounded-pill shadow-sm fw-bold">
+                                <i class="fas fa-arrow-left"></i> Volver al Home
+                            </a>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        
-                        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-                        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                </div>
 
-                        <form th:action="@{/perfil/guardar}" method="post" enctype="multipart/form-data" th:object="${perfil}">
-                            
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <label>Nombre</label>
-                                    <input type="text" th:field="*{nombre}" class="form-control" required>
-                                </div>
-                                <div class="col">
-                                    <label>Apellido</label>
-                                    <input type="text" th:field="*{apellido}" class="form-control" required>
-                                </div>
-                            </div>
+                <div class="profile-glass-card">
 
-                            <div class="mb-3">
-                                <label>Correo Electrónico</label>
-                                <input type="email" th:field="*{email}" class="form-control">
-                            </div>
+                    <a th:href="@{/perfil/editar}" class="btn-corner-edit" title="Editar mis datos">
+                        <i class="fas fa-pen"></i>
+                    </a>
 
-                            <div class="mb-3">
-                                <label>Fecha de Nacimiento</label>
-                                <input type="date" th:field="*{fechaNacimiento}" class="form-control">
-                            </div>
+                    <div class="profile-header">
+                        <div class="avatar-read-container">
+                            <img th:if="${usuario.perfil.avatar != null}" 
+                                 th:src="@{${usuario.perfil.avatar}}" class="avatar-read-img">
+                            <img th:if="${usuario.perfil.avatar == null}" 
+                                 th:src="@{/Profiles/default.jpg}" 
+                                 class="avatar-img" alt="Avatar por defecto">
+                        </div>
 
-                            <div class="mb-3">
-                                <label>Avatar (Imagen)</label>
-                                <input type="file" name="file" class="form-control" accept="image/*">
-                            </div>
+                        <h2 class="user-fullname" th:text="${usuario.perfil.nombre + ' ' + usuario.perfil.apellido}">
+                            Nombre Usuario
+                        </h2>
 
-                            <hr>
-                            <h5 class="text-muted">Seguridad</h5>
-                            <div class="mb-3">
-                                <label>Nueva Contraseña (Dejar en blanco para mantener la actual)</label>
-                                <input type="password" name="newPassword" class="form-control" placeholder="********">
-                            </div>
-
-                            <div class="d-flex justify-content-between">
-                                <a th:href="@{/home}" class="btn btn-secondary">Cancelar</a>
-                                <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                            </div>
-                        </form>
+                        <span class="role-badge" 
+                              th:classappend="${usuario.rol.name() == 'ADMINISTRADOR' ? 'badge-admin' : 'badge-user'}"
+                              th:text="${usuario.rol}">
+                            ROL
+                        </span>
                     </div>
+
+                    <div class="row g-4 px-md-4 justify-content-center">
+                        <div class="col-md-4">
+                            <div class="data-label"><i class="fas fa-user me-1"></i> Usuario</div>
+                            <div class="read-only-field">
+                                <i class="fas fa-at"></i>
+                                <span th:text="${usuario.username}">user123</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="data-label"><i class="fas fa-envelope me-1"></i> Correo Electrónico</div>
+                            <div class="read-only-field">
+                                <i class="far fa-envelope"></i>
+                                <span th:text="${usuario.perfil.email}" class="text-truncate d-block" style="max-width: 100%;">correo@ejemplo.com</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="data-label"><i class="fas fa-calendar-alt me-1"></i> Fecha de Nacimiento</div>
+                            <div class="read-only-field">
+                                <i class="far fa-calendar"></i>
+                                <span th:text="${#temporals.format(usuario.perfil.fechaNacimiento, 'dd/MM/yyyy')} ?: 'No definida'">01/01/2000</span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
-    </div>
-</body>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            document.addEventListener('DOMContentLoaded', function () {
+                var msgError = /*[[${error}]]*/ null;
+                var msgSuccess = /*[[${success}]]*/ null;
+                const swalTheme = {
+                    confirmButtonColor: '#a36bff',
+                    background: 'transparent',
+                    backdrop: `rgba(0,0,0,0.4)`
+                };
+                if (msgSuccess) {
+                    Swal.fire({ ...swalTheme, icon: 'success', title: '¡Perfil Actualizado!', text: msgSuccess, timer: 3000, showConfirmButton: true });
+                } else if (msgError) {
+                    Swal.fire({ ...swalTheme, icon: 'error', title: 'Ocurrió un error', text: msgError });
+                }
+            });
+            /*]]>*/
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', e => {
+                        const href = link.getAttribute('href');
+                        if (href && !href.startsWith('#') && !href.startsWith('javascript') && link.target !== '_blank') {
+                            e.preventDefault(); 
+                            document.body.classList.add('fade-out');
+                            setTimeout(() => { window.location.href = href; }, 400);
+                        }
+                    });
+                });
+                window.addEventListener('pageshow', (event) => {
+                    if (event.persisted) {
+                        document.body.classList.remove('fade-out');
+                    }
+                });
+            });
+        </script>
+    </body>
 </html>

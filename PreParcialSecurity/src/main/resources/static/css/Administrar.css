@@ -1,0 +1,246 @@
+/* =========================================
+   ESTILOS PARA EL PANEL DE ADMINISTRACIÓN (Glassmorphism)
+   ========================================= */
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,700');
+
+/* =========================================
+   1. ESTILO GENERAL Y FONDO ANIMADO
+   ========================================= */
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+    
+    /* Fondo vibrante */
+    background: linear-gradient(-45deg, #7eb4ff, #a674ff, #5dc8ff, #8d7aff);
+    background-size: 400% 400%;
+    background-attachment: fixed;
+
+    /* Animación del fondo */
+    animation: gradientMove 12s ease infinite;
+    
+    /* Transición base para la opacidad */
+    transition: opacity 0.4s ease-in-out;
+    opacity: 1;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Animación de Entrada (Fade In + Slide Up) */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(15px);
+        filter: blur(5px);
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* === LÓGICA DE SALIDA (FADE OUT) === */
+body.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 1. El contenedor se encoge y desenfoca al salir */
+body.fade-out .glass-container {
+    transform: scale(0.95);
+    filter: blur(5px);
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+/* 2. El Navbar sube y desaparece al salir */
+body.fade-out .navbar-glass {
+    transform: translateY(-100%);
+    transition: transform 0.4s ease;
+}
+
+/* =========================================
+   2. NAVBAR (Glassmorphism)
+   ========================================= */
+.navbar-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    
+    /* Importante para la animación de salida */
+    transition: transform 0.4s ease;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    font-weight: 600;
+}
+.btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: white;
+}
+
+/* =========================================
+   3. CONTENEDOR ACRÍLICO
+   ========================================= */
+.glass-container {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.7);
+    border-left: 1px solid rgba(255, 255, 255, 0.7);
+    margin-top: 20px;
+
+    /* === AQUI LA ANIMACIÓN DE ENTRADA === */
+    animation: fadeIn 0.6s ease-out;
+    transition: transform 0.3s ease;
+}
+
+/* =========================================
+   4. TABLA (Alineación Corregida)
+   ========================================= */
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-accent-bg: transparent;
+    --bs-table-striped-bg: transparent;
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.2);
+    
+    margin-bottom: 0;
+    color: #333;
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* Encabezado de la tabla */
+.table thead th {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    border-top: none;
+    color: #2c3e50;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Celdas del cuerpo */
+.table tbody td {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    font-weight: 500;
+}
+
+/* === EXCEPCIÓN: COLUMNA 3 (Nombre Completo) === */
+.table th:nth-child(3),
+.table td:nth-child(3) {
+    text-align: left;
+    padding-left: 40px;
+}
+
+.table td:nth-child(3) .d-flex {
+    justify-content: flex-start;
+}
+
+/* Efecto Hover */
+.table-hover tbody tr:hover td {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #000;
+}
+
+/* =========================================
+   5. ELEMENTOS UI
+   ========================================= */
+.btn-light {
+    background: rgba(255, 255, 255, 0.3) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    color: white !important;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.btn-light:hover {
+    background: rgba(255, 255, 255, 0.5) !important;
+    transform: translateY(-2px);
+}
+
+/* --- BOTÓN DANGER (ROJO) --- */
+.btn-outline-danger {
+    border-color: #ff6b6b;
+    color: #c0392b;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+}
+
+.btn-outline-danger:hover {
+    background-color: #ff6b6b;
+    color: white;
+    box-shadow: 0 4px 10px rgba(255, 107, 107, 0.4);
+    transform: scale(1.1);
+}
+
+/* --- BOTÓN WARNING (AMARILLO) --- */
+.btn-outline-warning {
+    border-color: #ffc107;      /* Amarillo estándar */
+    color: #b38f00;             /* Amarillo oscuro para texto (legibilidad) */
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+}
+
+.btn-outline-warning:hover {
+    background-color: #ffc107;  /* Fondo amarillo al pasar mouse */
+    color: white;               /* Texto blanco */
+    box-shadow: 0 4px 10px rgba(255, 193, 7, 0.4); /* Sombra amarilla suave */
+    transform: scale(1.1);      /* Efecto de zoom */
+}
+
+.rounded-circle {
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.badge {
+    padding: 0.6em 1em;
+    border-radius: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.bg-danger { background: linear-gradient(135deg, #ff6b6b, #ff4757) !important; }
+.bg-primary { background: linear-gradient(135deg, #4f9aff, #3742fa) !important; }
+
+/* =========================================
+   6. RESPONSIVIDAD
+   ========================================= */
+@media (max-width: 768px) {
+    .glass-container { padding: 15px; }
+    .btn-light { width: 100%; text-align: center; }
+}

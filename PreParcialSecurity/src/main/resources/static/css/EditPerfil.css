@@ -1,0 +1,274 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,800'); /* Unificado con los otros CSS */
+
+/* =========================================
+   1. ESTILO GENERAL Y FONDO ANIMADO
+   ========================================= */
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", "Segoe UI Emoji", sans-serif; /* Mantenemos tu fuente */
+    color: #333;
+    
+    /* Fondo vibrante */
+    background: linear-gradient(-45deg, #7eb4ff, #a674ff, #5dc8ff, #8d7aff);
+    background-size: 400% 400%;
+    background-attachment: fixed;
+    
+    /* Animación fondo */
+    animation: gradientMove 12s ease infinite;
+    
+    /* Transición de opacidad base */
+    transition: opacity 0.4s ease-in-out;
+    opacity: 1;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Animación de Entrada (Fade In + Slide Up) */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(15px);
+        filter: blur(5px);
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* === LÓGICA DE SALIDA (FADE OUT) === */
+body.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 1. La tarjeta se encoge y desenfoca al salir */
+body.fade-out .profile-glass-card {
+    transform: scale(0.95);
+    filter: blur(5px);
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+/* 2. El Navbar sube y desaparece al salir (evita trabarse) */
+body.fade-out .navbar-glass {
+    transform: translateY(-100%);
+    transition: transform 0.4s ease;
+}
+
+/* =========================================
+   2. NAVBAR (Glassmorphism - Acrílico)
+   ========================================= */
+.navbar-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    
+    /* Importante para la animación de salida */
+    transition: transform 0.4s ease;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* =========================================
+   3. LAYOUT
+   ========================================= */
+.content {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding-top: 40px; 
+    padding-bottom: 40px;
+}
+
+/* =========================================
+   4. TARJETA ACRÍLICA (IGUAL A PERFIL)
+   ========================================= */
+.profile-glass-card {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-radius: 25px;
+    padding: 50px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.7);
+    border-left: 1px solid rgba(255, 255, 255, 0.7);
+
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+
+    /* === AQUI LA ANIMACIÓN DE ENTRADA === */
+    animation: fadeIn 0.6s ease-out;
+    transition: transform 0.3s ease;
+}
+
+/* TÍTULO INTERNO */
+.section-title {
+    color: #2c3e50;
+    font-weight: 800;
+    margin-bottom: 20px;
+    border-bottom: 3px solid rgba(163, 107, 255, 0.5);
+    display: inline-block;
+    padding-bottom: 5px;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.text-muted {
+    color: #444 !important;
+    font-weight: 500;
+}
+
+/* =========================================
+   5. INPUTS ACRÍLICOS
+   ========================================= */
+.form-control {
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+    color: #000;
+    font-weight: 500;
+}
+
+.form-control:focus {
+    background-color: rgba(255, 255, 255, 0.85);
+    border-color: #a36bff;
+    box-shadow: 0 0 0 4px rgba(163, 107, 255, 0.15);
+    outline: none;
+}
+
+/* =========================================
+   6. BOTONES ACRÍLICOS
+   ========================================= */
+
+/* Botón Genérico */
+.btn-theme {
+    border-radius: 20px;
+    padding: 10px 25px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    border: none;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Botón Guardar (Acrílico Morado) */
+.btn-save {
+    background: linear-gradient(135deg, rgba(163, 107, 255, 0.7), rgba(124, 77, 255, 0.7));
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(163, 107, 255, 0.3);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.btn-save:hover {
+    background: linear-gradient(135deg, rgba(163, 107, 255, 0.9), rgba(124, 77, 255, 0.9));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(163, 107, 255, 0.4);
+    color: white;
+}
+
+/* === 7. BOTÓN TRANSPARENTE & ALERTA === */
+.btn-light {
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    color: white !important;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    padding: 10px 25px;
+}
+
+.btn-light:hover {
+    background: rgba(255, 255, 255, 0.5) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    color: #000 !important;
+}
+
+/* Alerta de éxito transparente */
+.alert-success {
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #155724;
+}
+.alert-danger {
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #721c24;
+}
+
+/* Botón Cerrar Sesión (Navbar) */
+.btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    font-weight: 600;
+}
+.btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: white;
+}
+
+/* =========================================
+   8. CAJA DE PREVISUALIZACIÓN (Avatar)
+   ========================================= */
+.glass-preview-box {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.glass-preview-box:hover {
+    background: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   9. RESPONSIVIDAD
+   ========================================= */
+@media (max-width: 1440px) {
+    .profile-glass-card {
+        padding: 35px;
+    }
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding: 20px 15px;
+    }
+    .profile-glass-card {
+        padding: 25px; 
+        backdrop-filter: blur(15px);
+    }
+}

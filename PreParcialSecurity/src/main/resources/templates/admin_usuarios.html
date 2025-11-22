@@ -4,84 +4,327 @@
     <title>Gestión de Usuarios</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <link rel="stylesheet" th:href="@{/css/Administrar.css}">
+
     <style>
-        body { 
-            background: linear-gradient(-45deg, #7eb4ff, #a674ff, #5dc8ff, #8d7aff);
-            background-size: 400% 400%;
-            animation: gradientMove 12s ease infinite;
-            min-height: 100vh;
-            font-family: "Segoe UI", sans-serif;
-        }
-        @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        
-        .glass-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            margin-top: 40px;
-        }
-        .table th { background-color: rgba(0,0,0,0.03); }
-    </style>
+            /* 1. Contenedor Principal del Modal (Efecto Cristal) */
+            .swal2-popup {
+                backdrop-filter: blur(15px);
+                background: rgba(255, 255, 255, 0.25) !important;
+                border-radius: 20px !important;
+                border: 1px solid rgba(255, 255, 255, 0.4) !important;
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3) !important;
+                /* Texto base blanco */
+                color: #ffffff !important;
+            }
+
+            /* 2. Títulos y Contenido */
+            .swal2-title {
+                /* Título blanco */
+                color: #ffffff !important;
+                font-weight: 800 !important;
+            }
+
+            /* Asegura que el texto del cuerpo (mensaje) sea blanco */
+            .swal2-html-container {
+                color: #ffffff !important;
+            }
+
+            /* 3. Botón de Confirmación */
+            .swal2-styled.swal2-confirm {
+                background: linear-gradient(135deg, #a36bff, #7c4dff) !important;
+                color: white !important;
+                border-radius: 25px !important;
+                font-weight: 700 !important;
+                padding: 10px 25px !important;
+                border: none !important;
+                box-shadow: 0 4px 15px rgba(163, 107, 255, 0.4) !important;
+            }
+
+            .swal2-styled.swal2-confirm:hover {
+                background: linear-gradient(135deg, #7c4dff, #6230e7) !important;
+            }
+
+            /* 4. Botón de Cancelación */
+            .swal2-styled.swal2-cancel {
+                background: rgba(255, 255, 255, 0.3) !important;
+                backdrop-filter: blur(8px) !important;
+                /* Texto blanco en botón cancelar */
+                color: #ffffff !important;
+                border: 1px solid rgba(255, 255, 255, 0.6) !important;
+                border-radius: 25px !important;
+                font-weight: 600 !important;
+                padding: 10px 25px !important;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+            }
+
+            .swal2-styled.swal2-cancel:hover {
+                background: rgba(255, 255, 255, 0.5) !important;
+            }
+
+            /* 5. Corrección Iconos Animados en fondo transparente */
+            .swal2-icon,
+            .swal2-success-fix,
+            .swal2-success-circular-line-left,
+            .swal2-success-circular-line-right,
+            .swal2-success-ring {
+                background-color: transparent !important;
+            }
+
+            /* ================================================== */
+            /* 6. CORRECCIÓN DE DIMENSIONES PARA BOTONES DE ACCIÓN */
+            /* ================================================== */
+            
+            /* Fuerza el botón a ser un círculo perfecto de tamaño fijo */
+            .btn-sm.rounded-circle {
+                width: 34px; /* Un tamaño ligeramente más grande para el círculo */
+                height: 34px;
+                padding: 0 !important; /* Elimina el padding de btn-sm */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Fuerza el tamaño de la fuente de los iconos */
+            .delete-btn i,
+            .toggle-btn i {
+                font-size: 1em !important; 
+            }
+        </style>
 </head>
 <body>
-    <div class="container py-5">
-        <div class="d-flex justify-content-between align-items-center mb-4 text-white">
-            <h2 class="fw-bold"><i class="fas fa-users-cog"></i> Gestión de Usuarios</h2>
-            <a th:href="@{/home}" class="btn btn-light rounded-pill shadow-sm">
-                <i class="fas fa-arrow-left"></i> Volver al Home
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-glass fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt me-2"></i> SecurityApp
             </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <form th:action="@{/logout}" method="post" class="d-flex mt-3 mt-lg-0">
+                    <button class="btn btn-outline-light rounded-pill px-4 fw-bold w-100" type="submit">
+                        <i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión
+                    </button>
+                </form>
+            </div>
         </div>
+    </nav>
 
-        <div class="glass-container">
-            <div th:if="${success}" class="alert alert-success rounded-pill text-center" th:text="${success}"></div>
-            <div th:if="${error}" class="alert alert-danger rounded-pill text-center" th:text="${error}"></div>
+    <div class="content py-5" style="margin-top: 70px;">
+        <div class="container">
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold text-white mb-0" style="text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                    <i class="fas fa-users-cog"></i> Gestión de Usuarios
+                </h2>
+                <a th:href="@{/home}" class="btn btn-light rounded-pill shadow-sm">
+                    <i class="fas fa-arrow-left"></i> Volver al Home
+                </a>
+            </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Usuario</th>
-                            <th>Nombre Completo</th>
-                            <th>Rol</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="u : ${listaUsuarios}">
-                            <td th:text="${u.idUsuario}" class="fw-bold">1</td>
-                            <td th:text="${u.username}">user</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img th:if="${u.perfil != null and u.perfil.avatar != null}" 
-                                         th:src="@{${u.perfil.avatar}}" 
-                                         class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
-                                    <span th:text="${u.perfil != null ? u.perfil.nombre + ' ' + u.perfil.apellido : 'Sin perfil'}">Nombre</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span th:class="${u.rol.name() == 'ADMINISTRADOR' ? 'badge bg-danger' : 'badge bg-primary'}" 
-                                      th:text="${u.rol}">ROL</span>
-                            </td>
-                            <td>
-                                <span th:if="${u.estado}" class="text-success fw-bold"><i class="fas fa-check-circle"></i> Activo</span>
-                                <span th:unless="${u.estado}" class="text-danger fw-bold"><i class="fas fa-ban"></i> Inactivo</span>
-                            </td>
-                            <td>
-                                <a th:href="@{/admin/eliminar/{id}(id=${u.idUsuario})}" 
-                                   class="btn btn-outline-danger btn-sm rounded-circle"
-                                   onclick="return confirm('¿Estás seguro? Esta acción no se puede deshacer.');"
-                                   title="Eliminar Usuario">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="glass-container">
+                
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="text-center">
+                            <tr>
+                                <th>ID</th>
+                                <th>Usuario</th>
+                                <th>Nombre Completo</th> <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="u : ${listaUsuarios}">
+                                <td th:text="${u.idUsuario}" class="fw-bold"></td>
+                                <td th:text="${u.username}"></td>
+                                
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img th:if="${u.perfil != null and u.perfil.avatar != null}" 
+                                             th:src="@{${u.perfil.avatar}}" 
+                                             class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+                                             
+                                        <img th:if="${u.perfil == null or u.perfil.avatar == null}" 
+                                             th:src="@{/Profiles/default.jpg}" 
+                                             class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+
+                                        <span th:text="${u.perfil != null ? u.perfil.nombre + ' ' + u.perfil.apellido : 'Sin perfil'}">Nombre</span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span th:class="${u.rol?.name() == 'ADMINISTRADOR' ? 'badge bg-danger' : (u.rol != null ? 'badge bg-primary' : 'badge bg-secondary')}" 
+                                            th:text="${u.rol != null ? u.rol : 'Sin Rol'}">ROL</span>
+                                </td>
+                                <td>
+                                    <span th:if="${u.estado}" class="text-success fw-bold" style="text-shadow: 0 0 10px rgba(255,255,255,0.8);">
+                                        <i class="fas fa-check-circle"></i> Activo
+                                    </span>
+                                    <span th:unless="${u.estado}" class="text-danger fw-bold">
+                                        <i class="fas fa-ban"></i> Inactivo
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <a href="javascript:void(0);" 
+                                           th:attr="data-id=${u.idUsuario}, data-estado=${u.estado}"
+                                           class="btn btn-outline-warning btn-sm rounded-circle toggle-btn me-2"
+                                           th:title="${u.estado} ? 'Deshabilitar Usuario' : 'Activar Usuario'">
+                                            <i th:class="${u.estado} ? 'fas fa-user-slash' : 'fas fa-user-check'"></i>
+                                        </a>
+
+                                        <a href="javascript:void(0);" 
+                                           th:attr="data-id=${u.idUsuario}"
+                                           class="btn btn-outline-danger btn-sm rounded-circle delete-btn"
+                                           title="Eliminar Usuario">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener('DOMContentLoaded', function() {
+            var msgError = /*[[${error}]]*/ null;
+            var msgSuccess = /*[[${success}]]*/ null;
+            
+            const swalTheme = {
+                background: 'transparent', 
+                backdrop: `rgba(0,0,0,0.4)`
+            };
+
+            // 1. Alertas del servidor
+            if(msgSuccess){
+                Swal.fire({
+                    ...swalTheme,
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: msgSuccess,
+                    confirmButtonColor: '#a36bff'
+                });
+            } else if(msgError){
+                Swal.fire({
+                    ...swalTheme,
+                    icon: 'error',
+                    title: 'Error de Gestión',
+                    text: msgError,
+                    confirmButtonColor: '#a36bff'
+                });
+            } 
+
+            // 2. Lógica para ELIMINAR (Botón Rojo)
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = this.getAttribute('data-id');
+                    const deleteUrl = '/admin/eliminar/' + userId;
+
+                    Swal.fire({
+                        ...swalTheme,
+                        title: '¿Eliminar permanentemente?',
+                        text: "Esta acción borrará el usuario y su perfil. ¡No se puede deshacer!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar',
+                        reverseButtons: true,
+                        customClass: {
+                            confirmButton: 'confirm-delete'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = deleteUrl;
+                        }
+                    });
+                });
+            });
+
+            // 3. Lógica para DESHABILITAR/ACTIVAR (Botón Amarillo)
+            document.querySelectorAll('.toggle-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = this.getAttribute('data-id');
+                    // Thymeleaf renderiza 'true' o 'false' como texto en JS
+                    const isUserActive = this.getAttribute('data-estado') === 'true'; 
+                    const toggleUrl = '/admin/toggle/' + userId;
+
+                    // Definimos textos dinámicos
+                    const titleText = isUserActive ? '¿Deshabilitar Usuario?' : '¿Activar Usuario?';
+                    const bodyText = isUserActive 
+                        ? 'El usuario no podrá iniciar sesión hasta que sea reactivado.' 
+                        : 'El usuario podrá volver a acceder al sistema.';
+                    const confirmText = isUserActive ? 'Sí, deshabilitar' : 'Sí, activar';
+                    const iconType = isUserActive ? 'warning' : 'question';
+
+                    Swal.fire({
+                        ...swalTheme,
+                        title: titleText,
+                        text: bodyText,
+                        icon: iconType,
+                        showCancelButton: true,
+                        confirmButtonText: confirmText,
+                        cancelButtonText: 'Cancelar',
+                        reverseButtons: true,
+                        customClass: {
+                            confirmButton: 'confirm-toggle'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = toggleUrl;
+                        }
+                    });
+                });
+            });
+        });
+        /*]]>*/
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', e => {
+                    const href = link.getAttribute('href');
+                    
+                    // Verificamos que sea un enlace interno válido
+                    if (href && 
+                        !href.startsWith('#') && 
+                        !href.startsWith('javascript') && 
+                        link.target !== '_blank') {
+                        
+                        e.preventDefault(); // Pausamos la navegación
+                        
+                        // Agregamos la clase que desvanece el cuerpo
+                        document.body.classList.add('fade-out');
+
+                        // Esperamos 400ms y navegamos
+                        setTimeout(() => {
+                            window.location.href = href;
+                        }, 400);
+                    }
+                });
+            });
+            
+            // Restaurar vista si se usa el botón "Atrás"
+            window.addEventListener('pageshow', (event) => {
+                if (event.persisted) {
+                    document.body.classList.remove('fade-out');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

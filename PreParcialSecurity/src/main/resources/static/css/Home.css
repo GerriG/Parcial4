@@ -1,0 +1,266 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,800');
+
+/* =========================================
+   1. ESTILO GENERAL Y FONDO ANIMADO
+   ========================================= */
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+    
+    /* Fondo vibrante */
+    background: linear-gradient(-45deg, #7eb4ff, #a674ff, #5dc8ff, #8d7aff);
+    background-size: 400% 400%;
+    background-attachment: fixed;
+
+    /* === ANIMACIÓN INTEGRADA: Fondo móvil + Entrada suave (Fade In) === */
+    animation: gradientMove 12s ease infinite, fadeIn 0.6s ease-out;
+    
+    /* Propiedades para la transición de salida */
+    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+    opacity: 1; /* Estado normal visible */
+}
+
+/* Animación del fondo */
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* === NUEVO: Animación de Entrada (Fade In) === */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(15px); /* Sutil efecto de subida */
+        filter: blur(5px);           /* Empieza borroso */
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* === NUEVO: Clase de Salida (Fade Out) === 
+   Se aplica con JS al hacer clic en un link */
+body.fade-out {
+    opacity: 0;
+    transform: scale(0.98); /* Se encoge ligeramente al irse */
+    filter: blur(5px);      /* Se desenfoca al irse */
+    pointer-events: none;   /* Bloquea clics extra */
+}
+
+/* =========================================
+   2. NAVBAR (Acrílico)
+   ========================================= */
+.navbar-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    font-weight: 600;
+}
+.btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: white;
+}
+
+/* =========================================
+   3. PANEL PRINCIPAL (Base: 1366x768)
+   ========================================= */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    
+    border-radius: 25px;
+    padding: 50px 40px; 
+    
+    overflow: hidden; 
+    
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.7);
+    border-left: 1px solid rgba(255, 255, 255, 0.7);
+    
+    margin-top: 80px; 
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 100%;
+}
+
+.glass-panel:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px 0 rgba(31, 38, 135, 0.3);
+}
+
+/* Imagen de Avatar */
+.avatar-container {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 25px auto;
+}
+
+.avatar-img { 
+    width: 100%; 
+    height: 100%; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    border: 4px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.glass-panel:hover .avatar-img {
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Textos */
+.user-name {
+    font-weight: 800;
+    color: #2c3e50;
+    margin-bottom: 5px;
+    font-size: 2rem;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.user-email {
+    color: #333;
+    font-weight: 500;
+    font-size: 1rem;
+    margin-bottom: 25px;
+}
+
+/* =========================================
+   4. BADGE DE ROL
+   ========================================= */
+.role-badge {
+    color: white;
+    padding: 10px 30px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.badge-admin {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.95), rgba(255, 71, 87, 0.95));
+    box-shadow: 0 4px 20px rgba(255, 71, 87, 0.4);
+}
+
+.badge-user {
+    background: linear-gradient(135deg, rgba(79, 154, 255, 0.95), rgba(55, 66, 250, 0.95));
+    box-shadow: 0 4px 20px rgba(55, 66, 250, 0.4);
+}
+
+/* =========================================
+   5. BOTONES PERSONALIZADOS (3 en fila)
+   ========================================= */
+.btn-custom {
+    border-radius: 50px;
+    padding: 12px 20px; 
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    margin: 0; /* Importante para el grid */
+    
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.btn-profile { 
+    background: linear-gradient(to right, rgba(126, 180, 255, 0.85), rgba(79, 154, 255, 0.85)); 
+}
+
+.btn-admin { 
+    background: linear-gradient(to right, rgba(163, 107, 255, 0.85), rgba(141, 119, 255, 0.85)); 
+}
+
+.btn-custom:hover { 
+    transform: translateY(-3px) scale(1.02); 
+    color: white; 
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    background-color: rgba(255,255,255,0.1); 
+}
+
+/* =========================================
+   6. MEDIA QUERY: PANTALLAS GRANDES (1080p+)
+   ========================================= */
+@media (min-width: 1400px) {
+    .glass-panel {
+        padding: 70px 50px;
+        max-width: 1000px; 
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 100px;
+        border-radius: 35px;
+    }
+
+    .avatar-container {
+        width: 170px;
+        height: 170px;
+        margin-bottom: 30px;
+    }
+
+    .user-name { font-size: 2.5rem; margin-bottom: 10px; }
+    .user-email { font-size: 1.1rem; margin-bottom: 30px; }
+
+    .btn-custom {
+        padding: 15px 30px;
+        font-size: 1.1rem;
+        gap: 12px;
+    }
+    
+    .role-badge {
+        font-size: 1rem;
+        padding: 12px 35px;
+    }
+}
+
+/* =========================================
+   7. RESPONSIVIDAD MÓVIL
+   ========================================= */
+@media (max-width: 768px) {
+    .glass-panel {
+        padding: 30px 20px;
+        margin-top: 100px;
+    }
+    
+    .btn-custom {
+        width: 100%;
+        margin: 0;
+    }
+}
