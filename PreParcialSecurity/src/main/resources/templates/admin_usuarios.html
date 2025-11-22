@@ -65,16 +65,11 @@
                 background: rgba(255, 255, 255, 0.5) !important;
             }
 
-            /* --- CORRECCIÓN PARA EL ICONO (Eliminar capa transparente) --- */
             /* 5. Corrección Iconos Animados en fondo transparente */
             .swal2-icon,
             .swal2-success-fix,
             .swal2-success-circular-line-left,
-            .swal2-success-circular-line-right {
-                background-color: transparent !important;
-            }
-
-            /* Opcional: Si el anillo se ve mal, fuerza transparencia también */
+            .swal2-success-circular-line-right,
             .swal2-success-ring {
                 background-color: transparent !important;
             }
@@ -93,11 +88,10 @@
                 justify-content: center;
             }
 
-            /* Fuerza el tamaño de la fuente de los iconos para que se vean uniformes dentro del círculo */
+            /* Fuerza el tamaño de la fuente de los iconos */
             .delete-btn i,
             .toggle-btn i {
-                font-size: 1em !important; /* Mantiene el tamaño base del font */
-                /* Opcional: para compensar glifos, puedes usar '1.1em' o '14px' */
+                font-size: 1em !important; 
             }
         </style>
 </head>
@@ -154,12 +148,12 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <img th:if="${u.perfil != null and u.perfil.avatar != null}" 
-                                            th:src="@{${u.perfil.avatar}}" 
-                                            class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
-                                            
+                                             th:src="@{${u.perfil.avatar}}" 
+                                             class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+                                             
                                         <img th:if="${u.perfil == null or u.perfil.avatar == null}" 
-                                            th:src="@{/Profiles/default.jpg}" 
-                                            class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+                                             th:src="@{/Profiles/default.jpg}" 
+                                             class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
 
                                         <span th:text="${u.perfil != null ? u.perfil.nombre + ' ' + u.perfil.apellido : 'Sin perfil'}">Nombre</span>
                                     </div>
@@ -180,16 +174,16 @@
                                 <td>
                                     <div class="d-flex justify-content-center">
                                         <a href="javascript:void(0);" 
-                                            th:attr="data-id=${u.idUsuario}, data-estado=${u.estado}"
-                                            class="btn btn-outline-warning btn-sm rounded-circle toggle-btn me-2"
-                                            th:title="${u.estado} ? 'Deshabilitar Usuario' : 'Activar Usuario'">
+                                           th:attr="data-id=${u.idUsuario}, data-estado=${u.estado}"
+                                           class="btn btn-outline-warning btn-sm rounded-circle toggle-btn me-2"
+                                           th:title="${u.estado} ? 'Deshabilitar Usuario' : 'Activar Usuario'">
                                             <i th:class="${u.estado} ? 'fas fa-user-slash' : 'fas fa-user-check'"></i>
                                         </a>
 
                                         <a href="javascript:void(0);" 
-                                            th:attr="data-id=${u.idUsuario}"
-                                            class="btn btn-outline-danger btn-sm rounded-circle delete-btn"
-                                            title="Eliminar Usuario">
+                                           th:attr="data-id=${u.idUsuario}"
+                                           class="btn btn-outline-danger btn-sm rounded-circle delete-btn"
+                                           title="Eliminar Usuario">
                                             <i class="fas fa-trash-alt"></i>
                                         </a>
                                     </div>
@@ -250,7 +244,7 @@
                         cancelButtonText: 'Cancelar',
                         reverseButtons: true,
                         customClass: {
-                            confirmButton: 'confirm-delete' // Estilo morado/rojo
+                            confirmButton: 'confirm-delete'
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -286,7 +280,7 @@
                         cancelButtonText: 'Cancelar',
                         reverseButtons: true,
                         customClass: {
-                            confirmButton: 'confirm-toggle' // Estilo amarillo
+                            confirmButton: 'confirm-toggle'
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -297,6 +291,40 @@
             });
         });
         /*]]>*/
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', e => {
+                    const href = link.getAttribute('href');
+                    
+                    // Verificamos que sea un enlace interno válido
+                    if (href && 
+                        !href.startsWith('#') && 
+                        !href.startsWith('javascript') && 
+                        link.target !== '_blank') {
+                        
+                        e.preventDefault(); // Pausamos la navegación
+                        
+                        // Agregamos la clase que desvanece el cuerpo
+                        document.body.classList.add('fade-out');
+
+                        // Esperamos 400ms y navegamos
+                        setTimeout(() => {
+                            window.location.href = href;
+                        }, 400);
+                    }
+                });
+            });
+            
+            // Restaurar vista si se usa el botón "Atrás"
+            window.addEventListener('pageshow', (event) => {
+                if (event.persisted) {
+                    document.body.classList.remove('fade-out');
+                }
+            });
+        });
     </script>
 </body>
 </html>

@@ -9,16 +9,48 @@ body {
     min-height: 100vh;
     font-family: 'Montserrat', sans-serif;
     color: #333;
+    
+    /* Fondo vibrante */
     background: linear-gradient(-45deg, #7eb4ff, #a674ff, #5dc8ff, #8d7aff);
     background-size: 400% 400%;
-    animation: gradientMove 12s ease infinite;
     background-attachment: fixed;
+
+    /* === ANIMACIÓN INTEGRADA: Fondo móvil + Entrada suave (Fade In) === */
+    animation: gradientMove 12s ease infinite, fadeIn 0.6s ease-out;
+    
+    /* Propiedades para la transición de salida */
+    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+    opacity: 1; /* Estado normal visible */
 }
 
+/* Animación del fondo */
 @keyframes gradientMove {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
+}
+
+/* === NUEVO: Animación de Entrada (Fade In) === */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(15px); /* Sutil efecto de subida */
+        filter: blur(5px);           /* Empieza borroso */
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* === NUEVO: Clase de Salida (Fade Out) === 
+   Se aplica con JS al hacer clic en un link */
+body.fade-out {
+    opacity: 0;
+    transform: scale(0.98); /* Se encoge ligeramente al irse */
+    filter: blur(5px);      /* Se desenfoca al irse */
+    pointer-events: none;   /* Bloquea clics extra */
 }
 
 /* =========================================
@@ -79,7 +111,7 @@ body {
     box-shadow: 0 15px 40px 0 rgba(31, 38, 135, 0.3);
 }
 
-/* Imagen de Avatar (Tamaño Base) */
+/* Imagen de Avatar */
 .avatar-container {
     position: relative;
     width: 140px;
@@ -151,29 +183,22 @@ body {
    ========================================= */
 .btn-custom {
     border-radius: 50px;
-    
-    /* Ajustes para la nueva distribución */
     padding: 12px 20px; 
     font-weight: 700;
     border: 1px solid rgba(255, 255, 255, 0.3);
     color: white;
-    
-    /* CAMBIO CLAVE: Quitamos el margin fijo */
-    margin: 0; 
+    margin: 0; /* Importante para el grid */
     
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
     text-decoration: none;
     
-    /* Flexbox para centrar y alinear icono/texto */
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    
-    /* La clase w-100 en HTML hará que ocupe toda la columna */
 }
 
 .btn-profile { 
@@ -195,30 +220,26 @@ body {
    6. MEDIA QUERY: PANTALLAS GRANDES (1080p+)
    ========================================= */
 @media (min-width: 1400px) {
-    /* Aumentamos el panel y controlamos su ancho */
     .glass-panel {
         padding: 70px 50px;
-        max-width: 1000px; /* Aumentado para dar espacio a los 3 botones */
+        max-width: 1000px; 
         margin-left: auto;
         margin-right: auto;
         margin-top: 100px;
         border-radius: 35px;
     }
 
-    /* Aumentamos el avatar */
     .avatar-container {
         width: 170px;
         height: 170px;
         margin-bottom: 30px;
     }
 
-    /* Textos más grandes para llenar el espacio */
     .user-name { font-size: 2.5rem; margin-bottom: 10px; }
     .user-email { font-size: 1.1rem; margin-bottom: 30px; }
 
-    /* Botones más grandes */
     .btn-custom {
-        padding: 15px 30px; /* El padding lateral es menos importante ahora */
+        padding: 15px 30px;
         font-size: 1.1rem;
         gap: 12px;
     }
@@ -230,7 +251,7 @@ body {
 }
 
 /* =========================================
-   7. RESPONSIVIDAD MÓVIL (Menor a 768px)
+   7. RESPONSIVIDAD MÓVIL
    ========================================= */
 @media (max-width: 768px) {
     .glass-panel {
@@ -238,11 +259,8 @@ body {
         margin-top: 100px;
     }
     
-    /* Los botones vuelven a ocupar el 100% de ancho en móvil */
     .btn-custom {
         width: 100%;
         margin: 0;
     }
-    
-    /* El sistema de rejilla (col-12) ya maneja el apilamiento vertical */
 }

@@ -4,79 +4,40 @@
         <title>Mi Perfil</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <link rel="stylesheet" th:href="@{/css/Home.css}">
         <link rel="stylesheet" th:href="@{/css/Perfil.css}">
 
         <style>
-            /* 1. Contenedor Principal del Modal (Efecto Cristal) */
+            /* Estilos específicos para SweetAlert Glassmorphism */
             .swal2-popup {
                 backdrop-filter: blur(15px);
                 background: rgba(255, 255, 255, 0.25) !important;
                 border-radius: 20px !important;
                 border: 1px solid rgba(255, 255, 255, 0.4) !important;
                 box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3) !important;
-                /* CAMBIO: Texto base blanco */
                 color: #ffffff !important;
             }
-
-            /* 2. Títulos y Contenido */
-            .swal2-title {
-                /* CAMBIO: Título blanco */
+            .swal2-title, .swal2-html-container {
                 color: #ffffff !important;
                 font-weight: 800 !important;
             }
-
-            /* CAMBIO: Asegura que el texto del cuerpo (mensaje) sea blanco */
-            .swal2-html-container {
-                color: #ffffff !important;
-            }
-
-            /* 3. Botón de Confirmación */
             .swal2-styled.swal2-confirm {
                 background: linear-gradient(135deg, #a36bff, #7c4dff) !important;
                 color: white !important;
                 border-radius: 25px !important;
-                font-weight: 700 !important;
-                padding: 10px 25px !important;
                 border: none !important;
                 box-shadow: 0 4px 15px rgba(163, 107, 255, 0.4) !important;
             }
-
-            .swal2-styled.swal2-confirm:hover {
-                background: linear-gradient(135deg, #7c4dff, #6230e7) !important;
-            }
-
-            /* 4. Botón de Cancelación */
             .swal2-styled.swal2-cancel {
                 background: rgba(255, 255, 255, 0.3) !important;
-                backdrop-filter: blur(8px) !important;
-                /* CAMBIO: Texto blanco en botón cancelar */
                 color: #ffffff !important;
                 border: 1px solid rgba(255, 255, 255, 0.6) !important;
                 border-radius: 25px !important;
-                font-weight: 600 !important;
-                padding: 10px 25px !important;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
             }
-
-            .swal2-styled.swal2-cancel:hover {
-                background: rgba(255, 255, 255, 0.5) !important;
-            }
-
-            /* --- CORRECCIÓN PARA EL ICONO (Eliminar capa transparente) --- */
-            /* 5. Corrección Iconos Animados en fondo transparente */
-            .swal2-icon,
-            .swal2-success-fix,
-            .swal2-success-circular-line-left,
-            .swal2-success-circular-line-right {
-                background-color: transparent !important;
-            }
-
-            /* Opcional: Si el anillo se ve mal, fuerza transparencia también */
-            .swal2-success-ring {
+            /* Iconos transparentes */
+            .swal2-icon, .swal2-success-ring {
                 background-color: transparent !important;
             }
         </style>
@@ -88,11 +49,9 @@
                 <a class="navbar-brand" href="/home">
                     <i class="fas fa-shield-alt me-2"></i> SecurityApp
                 </a>
-
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <form th:action="@{/logout}" method="post" class="d-flex mt-3 mt-lg-0">
                         <button class="btn btn-outline-light rounded-pill px-4 fw-bold w-100" type="submit">
@@ -131,8 +90,7 @@
                                  th:src="@{${usuario.perfil.avatar}}" class="avatar-read-img">
                             <img th:if="${usuario.perfil.avatar == null}" 
                                  th:src="@{/Profiles/default.jpg}" 
-                                 class="avatar-img" 
-                                 alt="Avatar por defecto">
+                                 class="avatar-img" alt="Avatar por defecto">
                         </div>
 
                         <h2 class="user-fullname" th:text="${usuario.perfil.nombre + ' ' + usuario.perfil.apellido}">
@@ -147,7 +105,6 @@
                     </div>
 
                     <div class="row g-4 px-md-4 justify-content-center">
-
                         <div class="col-md-4">
                             <div class="data-label"><i class="fas fa-user me-1"></i> Usuario</div>
                             <div class="read-only-field">
@@ -155,7 +112,6 @@
                                 <span th:text="${usuario.username}">user123</span>
                             </div>
                         </div>
-
                         <div class="col-md-4">
                             <div class="data-label"><i class="fas fa-envelope me-1"></i> Correo Electrónico</div>
                             <div class="read-only-field">
@@ -163,7 +119,6 @@
                                 <span th:text="${usuario.perfil.email}" class="text-truncate d-block" style="max-width: 100%;">correo@ejemplo.com</span>
                             </div>
                         </div>
-
                         <div class="col-md-4">
                             <div class="data-label"><i class="fas fa-calendar-alt me-1"></i> Fecha de Nacimiento</div>
                             <div class="read-only-field">
@@ -171,7 +126,6 @@
                                 <span th:text="${#temporals.format(usuario.perfil.fechaNacimiento, 'dd/MM/yyyy')} ?: 'No definida'">01/01/2000</span>
                             </div>
                         </div>
-
                     </div>
 
                 </div>
@@ -183,37 +137,40 @@
         <script th:inline="javascript">
             /*<![CDATA[*/
             document.addEventListener('DOMContentLoaded', function () {
-                // Obtenemos los mensajes flash enviados por el controller al redirigir
                 var msgError = /*[[${error}]]*/ null;
                 var msgSuccess = /*[[${success}]]*/ null;
-
-                // Configuración del tema
                 const swalTheme = {
                     confirmButtonColor: '#a36bff',
                     background: 'transparent',
                     backdrop: `rgba(0,0,0,0.4)`
                 };
-
-                // Mostrar SweetAlert
                 if (msgSuccess) {
-                    Swal.fire({
-                        ...swalTheme,
-                        icon: 'success',
-                        title: '¡Perfil Actualizado!',
-                        text: msgSuccess,
-                        timer: 3000, // Se cierra automático en 3 seg
-                        showConfirmButton: true
-                    });
+                    Swal.fire({ ...swalTheme, icon: 'success', title: '¡Perfil Actualizado!', text: msgSuccess, timer: 3000, showConfirmButton: true });
                 } else if (msgError) {
-                    Swal.fire({
-                        ...swalTheme,
-                        icon: 'error',
-                        title: 'Ocurrió un error',
-                        text: msgError
-                    });
+                    Swal.fire({ ...swalTheme, icon: 'error', title: 'Ocurrió un error', text: msgError });
                 }
             });
             /*]]>*/
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', e => {
+                        const href = link.getAttribute('href');
+                        if (href && !href.startsWith('#') && !href.startsWith('javascript') && link.target !== '_blank') {
+                            e.preventDefault(); 
+                            document.body.classList.add('fade-out');
+                            setTimeout(() => { window.location.href = href; }, 400);
+                        }
+                    });
+                });
+                window.addEventListener('pageshow', (event) => {
+                    if (event.persisted) {
+                        document.body.classList.remove('fade-out');
+                    }
+                });
+            });
         </script>
     </body>
 </html>

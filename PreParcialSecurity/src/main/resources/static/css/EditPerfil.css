@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,800'); /* Unificado con los otros CSS */
+
 /* =========================================
    1. ESTILO GENERAL Y FONDO ANIMADO
    ========================================= */
@@ -5,20 +7,59 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    font-family: "Segoe UI", "Segoe UI Emoji", sans-serif;
+    font-family: "Segoe UI", "Segoe UI Emoji", sans-serif; /* Mantenemos tu fuente */
     color: #333;
     
-    /* Fondo vibrante para resaltar el efecto acrílico */
+    /* Fondo vibrante */
     background: linear-gradient(-45deg, #7eb4ff, #a674ff, #5dc8ff, #8d7aff);
     background-size: 400% 400%;
-    animation: gradientMove 12s ease infinite;
     background-attachment: fixed;
+    
+    /* Animación fondo */
+    animation: gradientMove 12s ease infinite;
+    
+    /* Transición de opacidad base */
+    transition: opacity 0.4s ease-in-out;
+    opacity: 1;
 }
 
 @keyframes gradientMove {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
+}
+
+/* Animación de Entrada (Fade In + Slide Up) */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(15px);
+        filter: blur(5px);
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* === LÓGICA DE SALIDA (FADE OUT) === */
+body.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 1. La tarjeta se encoge y desenfoca al salir */
+body.fade-out .profile-glass-card {
+    transform: scale(0.95);
+    filter: blur(5px);
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+/* 2. El Navbar sube y desaparece al salir (evita trabarse) */
+body.fade-out .navbar-glass {
+    transform: translateY(-100%);
+    transition: transform 0.4s ease;
 }
 
 /* =========================================
@@ -31,6 +72,9 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     padding: 15px 0;
+    
+    /* Importante para la animación de salida */
+    transition: transform 0.4s ease;
 }
 
 .navbar-brand {
@@ -46,7 +90,6 @@ body {
     flex: 1;
     width: 100%;
     box-sizing: border-box;
-    /* Espaciado igual a Perfil.css */
     padding-top: 40px; 
     padding-bottom: 40px;
 }
@@ -55,30 +98,23 @@ body {
    4. TARJETA ACRÍLICA (IGUAL A PERFIL)
    ========================================= */
 .profile-glass-card {
-    /* Fondo mucho más transparente (25% opacidad) */
     background: rgba(255, 255, 255, 0.25);
-    
-    /* Desenfoque intenso */
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
-    
-    border-radius: 25px; /* Aumentado a 25px para igualar Perfil */
-    
-    /* CAMBIO: Padding aumentado a 50px para igualar tamaño visual */
+    border-radius: 25px;
     padding: 50px;
-    
-    /* Sombra suave pero difusa */
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
-    
-    /* Bordes de cristal */
     border: 1px solid rgba(255, 255, 255, 0.4);
     border-top: 1px solid rgba(255, 255, 255, 0.7);
     border-left: 1px solid rgba(255, 255, 255, 0.7);
 
-    /* CAMBIO: Asegurar ancho completo para que no se vea "pequeño" */
     width: 100%;
     margin: 0 auto;
     position: relative;
+
+    /* === AQUI LA ANIMACIÓN DE ENTRADA === */
+    animation: fadeIn 0.6s ease-out;
+    transition: transform 0.3s ease;
 }
 
 /* TÍTULO INTERNO */
@@ -153,9 +189,9 @@ body {
     color: white;
 }
 
-/* === 7. BOTÓN TRANSPARENTE & ALERTA (SOLICITADO) === */
+/* === 7. BOTÓN TRANSPARENTE & ALERTA === */
 .btn-light {
-    background: rgba(255, 255, 255, 0.25) !important; /* Transparencia aplicada */
+    background: rgba(255, 255, 255, 0.25) !important;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.5) !important;
@@ -180,12 +216,19 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.4);
     color: #155724;
 }
+.alert-danger {
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #721c24;
+}
 
 /* Botón Cerrar Sesión (Navbar) */
 .btn-outline-light {
     border-color: rgba(255, 255, 255, 0.6);
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(4px);
+    font-weight: 600;
 }
 .btn-outline-light:hover {
     background: rgba(255, 255, 255, 0.3);
@@ -212,16 +255,14 @@ body {
 }
 
 /* =========================================
-   9. RESPONSIVIDAD (Sincronizada con Perfil)
+   9. RESPONSIVIDAD
    ========================================= */
-/* Ajuste para Laptops (Igual que Perfil.css) */
 @media (max-width: 1440px) {
     .profile-glass-card {
         padding: 35px;
     }
 }
 
-/* Ajuste para Móviles */
 @media (max-width: 768px) {
     .content {
         padding: 20px 15px;

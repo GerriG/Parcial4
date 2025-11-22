@@ -4,6 +4,9 @@
     box-sizing: border-box;
 }
 
+/* =========================================
+   1. ESTILO GENERAL Y FONDO
+   ========================================= */
 body {
     background: linear-gradient(-45deg, #7eb4ff, #a674ff, #5dc8ff, #8d7aff);
     background-size: 400% 400%;
@@ -16,6 +19,10 @@ body {
     height: 100vh;
     margin: 0;
     overflow: hidden;
+
+    /* Transición suave para la salida */
+    transition: opacity 0.4s ease-in-out;
+    opacity: 1;
 }
 
 @keyframes gradientMove {
@@ -24,6 +31,34 @@ body {
     100% { background-position: 0% 50%; }
 }
 
+/* Animación de Entrada (Fade In + Slide Up) */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(30px); /* Un poco más de movimiento para el login */
+        filter: blur(5px);
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* === LÓGICA DE SALIDA (FADE OUT) === */
+body.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* La tarjeta se encoge y desenfoca al salir */
+body.fade-out .container {
+    transform: scale(0.90); /* Efecto zoom-out más notorio */
+    filter: blur(5px);
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+/* Resto de tipografía */
 h1 {
     font-weight: bold;
     margin: 0;
@@ -51,7 +86,7 @@ a {
 }
 
 /* =========================================
-   CONTENEDOR PRINCIPAL (Base: 1366x768)
+   CONTENEDOR PRINCIPAL (TARJETA)
    ========================================= */
 .container {
     background-color: rgba(255, 255, 255, 0.2);
@@ -64,11 +99,15 @@ a {
     position: relative;
     overflow: hidden;
     
-    /* TAMAÑO COMPACTO (Para Laptops) */
     width: 768px;
     max-width: 100%;
     min-height: 480px; 
-    transition: all 0.3s ease; /* Transición suave al cambiar de tamaño */
+    
+    /* === AQUI LA ANIMACIÓN DE ENTRADA === */
+    animation: fadeIn 0.8s ease-out;
+    
+    /* Transiciones combinadas (resize y fade-out) */
+    transition: all 0.3s ease, transform 0.4s ease, filter 0.4s ease;
 }
 
 .form-container {
@@ -141,7 +180,7 @@ button.ghost {
 }
 
 /* =========================================
-   ANIMACIONES Y OVERLAY
+   ANIMACIONES DEL SLIDER (OVERLAY)
    ========================================= */
 .sign-in-container { left: 0; width: 50%; z-index: 2; }
 .container.right-panel-active .sign-in-container { transform: translateX(100%); }
@@ -235,46 +274,34 @@ button.ghost {
 
 
 /* =========================================
-   MEDIA QUERY: PANTALLAS GRANDES (1080p)
-   Se activa solo si el ancho es mayor a 1400px
+   MEDIA QUERY: PANTALLAS GRANDES
    ========================================= */
 @media (min-width: 1400px) {
-    /* Aumentamos el contenedor un 30-40% */
     .container {
         width: 1000px;
         min-height: 650px;
         border-radius: 25px;
     }
-
-    /* Aumentamos fuentes y espacios */
     h1 { font-size: 2.5rem; margin-bottom: 15px; }
     p { font-size: 1.1rem; line-height: 1.6; }
     span { font-size: 1rem; margin-bottom: 20px; }
     a { font-size: 1rem; }
-
-    /* Inputs más grandes */
     input, select {
         padding: 15px 20px;
         margin: 10px 0;
         font-size: 1rem;
         border-radius: 10px;
     }
-
-    /* Botones más grandes */
     button {
         padding: 15px 60px;
         font-size: 1rem;
         margin-top: 25px;
     }
-
-    /* Iconos sociales más grandes */
     .social-container a {
         width: 50px;
         height: 50px;
         font-size: 1.2rem;
     }
-    
-    /* Ajuste de padding en formularios */
     form { padding: 0 60px; }
     .overlay-panel { padding: 0 60px; }
 }

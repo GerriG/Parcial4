@@ -92,5 +92,40 @@
             container.classList.remove("right-panel-active");
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', e => {
+                    const href = link.getAttribute('href');
+                    
+                    // Verificamos que sea un enlace interno válido y no un botón del slider (#)
+                    if (href && 
+                        href !== '#' &&
+                        !href.startsWith('#') && 
+                        !href.startsWith('javascript') && 
+                        link.target !== '_blank') {
+                        
+                        e.preventDefault(); 
+                        
+                        // Agregamos la clase que desvanece el cuerpo
+                        document.body.classList.add('fade-out');
+
+                        // Esperamos 400ms y navegamos
+                        setTimeout(() => {
+                            window.location.href = href;
+                        }, 400);
+                    }
+                });
+            });
+            
+            // Restaurar vista al volver atrás
+            window.addEventListener('pageshow', (event) => {
+                if (event.persisted) {
+                    document.body.classList.remove('fade-out');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

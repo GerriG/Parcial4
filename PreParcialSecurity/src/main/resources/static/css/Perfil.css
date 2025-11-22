@@ -13,18 +13,49 @@ body {
     background-size: 400% 400%;
     animation: gradientMove 12s ease infinite;
     background-attachment: fixed;
+    
+    /* Transición de opacidad para el body */
+    transition: opacity 0.4s ease-in-out;
+    opacity: 1;
 }
 
 @keyframes gradientMove {
-    0% {
-        background-position: 0% 50%;
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(15px); 
+        filter: blur(5px);
     }
-    50% {
-        background-position: 100% 50%;
+    to { 
+        opacity: 1; 
+        transform: translateY(0);
+        filter: blur(0);
     }
-    100% {
-        background-position: 0% 50%;
-    }
+}
+
+/* === LÓGICA DE SALIDA (FADE OUT) === */
+body.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Al salir, el contenido se encoge y desenfoca */
+body.fade-out .content,
+body.fade-out .profile-glass-card {
+    transform: scale(0.95);
+    filter: blur(5px);
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+/* Al salir, el navbar sube */
+body.fade-out .navbar-glass {
+    transform: translateY(-100%);
+    transition: transform 0.4s ease;
 }
 
 /* =========================================
@@ -37,6 +68,7 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     padding: 15px 0;
+    transition: transform 0.4s ease;
 }
 
 .navbar-brand {
@@ -76,6 +108,10 @@ body {
     border-left: 1px solid rgba(255, 255, 255, 0.7);
     width: 100%;
     margin: 0 auto;
+    
+    /* Animación de entrada AQUI */
+    animation: fadeIn 0.6s ease-out;
+    transition: transform 0.3s ease;
 }
 
 /* =========================================
@@ -216,7 +252,7 @@ body {
    7. BOTÓN TRANSPARENTE (GLOBAL)
    ========================================= */
 .btn-light {
-    background: rgba(255, 255, 255, 0.25) !important; /* Transparencia aplicada */
+    background: rgba(255, 255, 255, 0.25) !important;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.5) !important;
