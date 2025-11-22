@@ -15,6 +15,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+import java.time.LocalDate;
+
 @Service
 public class UsuarioService {
 
@@ -108,5 +110,19 @@ public class UsuarioService {
 
         usuarioBD.setPerfil(perfilBD);
         usuarioRepository.save(usuarioBD);
+    }
+    // Restablecer contraseña
+    public boolean restablecerContrasena(String email, LocalDate fechaNacimiento, String nuevaPassword) {
+        // 1. Buscar usuario que coincida con el email y la fecha
+        var usuarioOpt = usuarioRepository.findByEmailAndFechaNacimiento(email, fechaNacimiento);
+
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            // 2. Encriptar y guardar la nueva contraseña
+            usuario.setPassword(passwordEncoder.encode(nuevaPassword));
+            usuarioRepository.save(usuario);
+            return true;
+        }
+        return false;
     }
 }

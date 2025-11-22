@@ -272,6 +272,110 @@ button.ghost {
 .alert-compact.error { background-color: #ffdddd; color: #d8000c; border: 1px solid #f44336; }
 .alert-compact.success { background-color: #ddffdd; color: #2e7d32; border: 1px solid #4CAF50; }
 
+/* =========================================
+   MODAL DE RECUPERACIÓN (Glassmorphism)
+   ========================================= */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Fondo oscuro semitransparente */
+    backdrop-filter: blur(8px);      /* Desenfoque del fondo */
+    z-index: 1000;
+    display: none; /* Oculto por defecto */
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-glass {
+    background: rgba(255, 255, 255, 0.25); /* Cristal más opaco */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    padding: 40px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+}
+
+.modal-overlay.active .modal-glass {
+    transform: scale(1);
+}
+
+/* Botón de cerrar (X) */
+.btn-close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.btn-close-modal:hover { transform: rotate(90deg) scale(1.1); color: #eee; }
+
+/* Títulos y Textos del Modal */
+.modal-glass h2 {
+    color: white;
+    margin-bottom: 10px;
+    font-weight: 800;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.modal-glass p {
+    color: #eee;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+/* Inputs del Modal (Ligeramente diferentes para resaltar) */
+.modal-glass input {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #333;
+    border: 2px solid transparent;
+}
+.modal-glass input:focus {
+    border-color: #a36bff;
+    background-color: #fff;
+}
+
+/* Botón del Modal */
+.btn-modal {
+    width: 100%;
+    margin-top: 15px;
+    background-color: #fff;
+    color: #a36bff;
+    border: none;
+}
+.btn-modal:hover {
+    background-color: #f0f0f0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Alertas dentro del modal */
+.modal-alert {
+    font-size: 0.8rem;
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: none;
+}
+
 
 /* =========================================
    MEDIA QUERY: PANTALLAS GRANDES

@@ -6,6 +6,198 @@
     <title>Bienvenido - SecurityApp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/Styles.css}">
+
+    <style>
+        /* =========================================
+           ESTILOS DEL MODAL
+           ========================================= */
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            border-radius: 25px;
+            padding: 45px 40px;
+            width: 420px;
+            max-width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: -webkit-linear-gradient(#a36bff, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 10px rgba(163, 107, 255, 0.3));
+        }
+
+        .modal-card h2 {
+            color: #2c3e50;
+            font-weight: 800;
+            font-size: 1.8rem;
+            margin: 0 0 10px 0;
+        }
+
+        .modal-card p {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group i {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: #a36bff;
+            font-size: 1.1rem;
+            z-index: 10;
+        }
+
+        .modal-card input {
+            background: #f4f7f6;
+            border: 2px solid #f4f7f6;
+            color: #333;
+            padding: 12px 15px 12px 45px;
+            border-radius: 12px;
+            width: 100%;
+            font-size: 0.95rem;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .modal-card input:focus {
+            background: #fff;
+            border-color: #a36bff;
+            box-shadow: 0 0 0 4px rgba(163, 107, 255, 0.15);
+        }
+
+        .btn-modal {
+            width: 100%;
+            padding: 14px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            background: linear-gradient(135deg, #a36bff 0%, #7c4dff 100%);
+            box-shadow: 0 10px 20px rgba(124, 77, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-modal:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(124, 77, 255, 0.4);
+        }
+
+        /* --- BOTÓN CERRAR (CÍRCULO PERFECTO CORREGIDO) --- */
+        .btn-close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            
+            /* Forzamos dimensiones cuadradas */
+            width: 35px !important;
+            height: 35px !important;
+            min-width: 35px !important;
+            min-height: 35px !important;
+            
+            /* Eliminamos estilos heredados conflictivos */
+            padding: 0 !important;
+            margin: 0 !important;
+            line-height: 35px !important; /* Centrado vertical antiguo */
+            
+            background: #f4f7f6;
+            border: none;
+            border-radius: 50%;
+            
+            /* Flexbox para centrado perfecto del icono */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            color: #999;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .btn-close-modal i {
+            font-size: 16px; /* Tamaño controlado del icono */
+            line-height: 1;
+        }
+
+        .btn-close-modal:hover {
+            background: #e9ecef;
+            color: #333;
+            transform: rotate(90deg);
+        }
+
+        /* Alertas del Modal */
+        .modal-alert {
+            font-size: 0.85rem;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        .modal-alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .modal-alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
 </head>
 <body>
     <div class="container" id="container">
@@ -41,30 +233,28 @@
         </div>
 
         <div class="form-container sign-in-container">
-            <form th:action="@{/login}" method="post">
+            <form id="formLogin" th:action="@{/login}" method="post">
                 <h1>Iniciar Sesión</h1>
                 <div class="social-container">
                     <a href="#" class="social"><i class="fas fa-lock"></i></a>
                 </div>
                 <span>o usa tu cuenta</span>
                 
-                <div th:if="${param.error} and ${error == null} and ${param.disabled == null}" class="alert-compact error">
+                <div id="alertError" class="alert-compact error" style="display: none;">
                     <i class="fas fa-exclamation-circle"></i> Datos incorrectos
                 </div>
-
-                <div th:if="${param.disabled}" class="alert-compact error" style="border-color: #ffbb33; background-color: #fff8e1; color: #856404;">
-                    <i class="fas fa-user-slash"></i> Tu cuenta ha sido deshabilitada por un administrador.
+                <div id="alertDisabled" class="alert-compact error" style="display: none; border-color: #ffbb33; background-color: #fff8e1; color: #856404;">
+                    <i class="fas fa-user-slash"></i> Tu cuenta está deshabilitada.
                 </div>
-                
-                <div th:if="${error}" class="alert-compact error" th:text="${error}"></div>
                 <div th:if="${success}" class="alert-compact success" th:text="${success}"></div>
                 <div th:if="${param.logout}" class="alert-compact success">Sesión cerrada</div>
 
                 <input type="text" name="username" placeholder="Usuario" required />
                 <input type="password" name="password" placeholder="Contraseña" required />
                 
-                <a href="#" class="forgot-pass">¿Olvidaste tu contraseña?</a>
-                <button type="submit">Ingresar</button>
+                <a href="#" class="forgot-pass" id="forgotPassLink">¿Olvidaste tu contraseña?</a>
+                
+                <button type="submit" id="btnLogin">Ingresar</button>
             </form>
         </div>
 
@@ -84,51 +274,171 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="resetModal">
+        <div class="modal-card">
+            <button class="btn-close-modal" id="closeModal">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+
+            <h2>Recuperar Acceso</h2>
+            <p>Ingresa tus datos de seguridad para establecer una nueva contraseña.</p>
+
+            <div id="modalSuccess" class="modal-alert success">
+                <i class="fas fa-check-circle"></i> ¡Listo! Contraseña actualizada.
+            </div>
+            <div id="modalError" class="modal-alert error">
+                <i class="fas fa-times-circle"></i> Los datos no coinciden.
+            </div>
+
+            <form id="formReset" style="background: transparent; padding: 0;">
+                
+                <div class="input-group">
+                    <i class="far fa-envelope"></i>
+                    <input type="email" name="email" placeholder="Correo Electrónico" required />
+                </div>
+
+                <div class="input-group">
+                    <i class="far fa-calendar-alt"></i>
+                    <input 
+                        type="text" 
+                        name="fechaNacimiento" 
+                        placeholder="Fecha de Nacimiento" 
+                        onfocus="(this.type='date')" 
+                        onblur="if(!this.value)this.type='text'" 
+                        required 
+                    />
+                </div>
+
+                <div class="input-group">
+                    <i class="fas fa-key"></i>
+                    <input type="password" name="newPassword" placeholder="Nueva Contraseña" required />
+                </div>
+                
+                <button type="submit" class="btn-modal" id="btnReset">Restablecer</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         const signUpButton = document.getElementById('signUp');
         const signInButton = document.getElementById('signIn');
         const container = document.getElementById('container');
 
-        signUpButton.addEventListener('click', () => {
-            container.classList.add("right-panel-active");
+        signUpButton.addEventListener('click', () => container.classList.add("right-panel-active"));
+        signInButton.addEventListener('click', () => container.classList.remove("right-panel-active"));
+
+        // Modal
+        const modal = document.getElementById('resetModal');
+        const openModalBtn = document.getElementById('forgotPassLink');
+        const closeModalBtn = document.getElementById('closeModal');
+
+        openModalBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.classList.add('active');
+            document.getElementById('formReset').reset();
+            document.getElementById('modalSuccess').style.display = 'none';
+            document.getElementById('modalError').style.display = 'none';
         });
 
-        signInButton.addEventListener('click', () => {
-            container.classList.remove("right-panel-active");
+        closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.remove('active');
         });
     </script>
 
+    <script>
+        document.getElementById('formLogin').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const params = new URLSearchParams(formData);
+            const btn = document.getElementById('btnLogin');
+            const originalText = btn.innerText;
+            
+            btn.innerText = 'Verificando...';
+            btn.disabled = true;
+            document.getElementById('alertError').style.display = 'none';
+            document.getElementById('alertDisabled').style.display = 'none';
+
+            fetch('/login', { method: 'POST', body: params })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.href = data.url;
+                } else {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    document.querySelector('.sign-in-container form').animate([
+                        { transform: 'translateX(0)' }, { transform: 'translateX(-10px)' },
+                        { transform: 'translateX(10px)' }, { transform: 'translateX(0)' }
+                    ], { duration: 300 });
+
+                    if (data.type === 'disabled') {
+                        document.getElementById('alertDisabled').style.display = 'flex';
+                    } else {
+                        document.getElementById('alertError').style.display = 'flex';
+                    }
+                }
+            })
+            .catch(() => {
+                btn.innerText = originalText;
+                btn.disabled = false;
+                document.getElementById('alertError').style.display = 'flex';
+            });
+        });
+    </script>
+
+    <script>
+        document.getElementById('formReset').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const params = new URLSearchParams(formData);
+            const btn = document.getElementById('btnReset');
+            const originalText = btn.innerText;
+
+            btn.innerText = 'Procesando...';
+            btn.disabled = true;
+            document.getElementById('modalSuccess').style.display = 'none';
+            document.getElementById('modalError').style.display = 'none';
+
+            fetch('/reset-password', { method: 'POST', body: params })
+            .then(response => response.json())
+            .then(data => {
+                btn.innerText = originalText;
+                btn.disabled = false;
+                if (data.status === 'success') {
+                    document.getElementById('modalSuccess').style.display = 'flex';
+                    setTimeout(() => { document.getElementById('resetModal').classList.remove('active'); }, 2500);
+                } else {
+                    document.getElementById('modalError').style.display = 'flex';
+                }
+            })
+            .catch(() => {
+                btn.innerText = originalText;
+                btn.disabled = false;
+                document.getElementById('modalError').style.display = 'flex';
+            });
+        });
+    </script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', e => {
                     const href = link.getAttribute('href');
-                    
-                    // Verificamos que sea un enlace interno válido y no un botón del slider (#)
-                    if (href && 
-                        href !== '#' &&
-                        !href.startsWith('#') && 
-                        !href.startsWith('javascript') && 
-                        link.target !== '_blank') {
-                        
+                    if (href && href !== '#' && link.id !== 'forgotPassLink' && !href.startsWith('javascript') && link.target !== '_blank') {
                         e.preventDefault(); 
-                        
-                        // Agregamos la clase que desvanece el cuerpo
                         document.body.classList.add('fade-out');
-
-                        // Esperamos 400ms y navegamos
-                        setTimeout(() => {
-                            window.location.href = href;
-                        }, 400);
+                        setTimeout(() => { window.location.href = href; }, 400);
                     }
                 });
             });
-            
-            // Restaurar vista al volver atrás
             window.addEventListener('pageshow', (event) => {
-                if (event.persisted) {
-                    document.body.classList.remove('fade-out');
-                }
+                if (event.persisted) document.body.classList.remove('fade-out');
             });
         });
     </script>

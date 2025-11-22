@@ -13,6 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.http.ResponseEntity;
+import java.util.Map;
+import java.util.HashMap;
 
 import java.time.LocalDate;
 
@@ -27,7 +30,7 @@ public class AppController {
 
     @GetMapping("/login")
     public String login() {
-        return "login"; 
+        return "login";
     }
 
     @GetMapping("/redirectByRole")
@@ -45,13 +48,13 @@ public class AppController {
 
     // --- REGISTRO (CON FORMATO DE FECHA ASEGURADO) ---
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute Usuario usuario, 
-                               @RequestParam String nombre, 
-                               @RequestParam String apellido,
-                               @RequestParam String email,
-                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaNacimiento,
-                               @RequestParam(required = false) String rolSeleccionado,
-                               RedirectAttributes redirectAttributes) {
+    public String registerUser(@ModelAttribute Usuario usuario,
+            @RequestParam String nombre,
+            @RequestParam String apellido,
+            @RequestParam String email,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaNacimiento,
+            @RequestParam(required = false) String rolSeleccionado,
+            RedirectAttributes redirectAttributes) {
         try {
             if (usuarioRepository.findByUsername(usuario.getUsername()).isPresent()) {
                 redirectAttributes.addFlashAttribute("error", "El usuario ya existe.");
@@ -63,15 +66,15 @@ public class AppController {
             perfil.setApellido(apellido);
             perfil.setEmail(email);
             perfil.setFechaNacimiento(fechaNacimiento);
-            
-            if(rolSeleccionado != null && !rolSeleccionado.isEmpty()) {
+
+            if (rolSeleccionado != null && !rolSeleccionado.isEmpty()) {
                 usuario.setRol(Rol.valueOf(rolSeleccionado));
             } else {
                 usuario.setRol(Rol.USUARIO);
             }
-            
+
             usuarioService.registrarUsuario(usuario, perfil);
-            
+
             redirectAttributes.addFlashAttribute("success", "Cuenta creada. Inicia sesión.");
             return "redirect:/login";
 
@@ -83,17 +86,16 @@ public class AppController {
     }
 
     // --- MÉTODOS DE PERFIL MODIFICADOS ---
-
     // 1. VISTA DE LECTURA (Muestra perfil.html)
     @GetMapping("/perfil")
     public String verPerfil(Authentication auth, Model model) {
         String username = auth.getName();
         Usuario usuario = usuarioRepository.findByUsername(username).orElseThrow();
-        
+
         model.addAttribute("usuario", usuario);
         // Pasamos "perfil" también por comodidad en la vista
         model.addAttribute("perfil", usuario.getPerfil());
-        
+
         return "perfil"; // Retorna la vista de solo lectura
     }
 
@@ -102,20 +104,20 @@ public class AppController {
     public String editarPerfil(Authentication auth, Model model) {
         String username = auth.getName();
         Usuario usuario = usuarioRepository.findByUsername(username).orElseThrow();
-        
+
         model.addAttribute("usuario", usuario);
         model.addAttribute("perfil", usuario.getPerfil());
-        
+
         return "edit_perfil"; // Retorna el formulario de edición
     }
 
     // 3. GUARDAR CAMBIOS (Redirige a lectura si sale bien, o vuelve a editar si falla)
     @PostMapping("/perfil/guardar")
-    public String guardarPerfil(Authentication auth, 
-                                @ModelAttribute Perfil perfilForm,
-                                @RequestParam("file") MultipartFile archivo,
-                                @RequestParam(required = false) String newPassword,
-                                RedirectAttributes redirectAttributes) {
+    public String guardarPerfil(Authentication auth,
+            @ModelAttribute Perfil perfilForm,
+            @RequestParam("file") MultipartFile archivo,
+            @RequestParam(required = false) String newPassword,
+            RedirectAttributes redirectAttributes) {
         try {
             String username = auth.getName();
             Usuario usuarioSesion = usuarioRepository.findByUsername(username).orElseThrow();
@@ -136,7 +138,7 @@ public class AppController {
         model.addAttribute("listaUsuarios", usuarioRepository.findAll());
         return "admin_usuarios";
     }
-    
+
     // ----------------------------------------------------
     // 4. CAMBIAR ESTADO DE USUARIO (ACTIVAR/DESHABILITAR)
     // ----------------------------------------------------
@@ -144,17 +146,17 @@ public class AppController {
     public String toggleEstadoUsuario(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             Usuario usuario = usuarioRepository.findById(id).orElse(null);
-            
+
             if (usuario != null) {
                 // CORRECCIÓN APLICADA
                 // Usamos getEstado() y envolvemos en una verificación safe por si el Boolean fuera null
                 boolean estadoActual = Boolean.TRUE.equals(usuario.getEstado());
-                
+
                 // Invertimos el estado (true a false, o viceversa)
                 usuario.setEstado(!estadoActual);
-                
+
                 usuarioRepository.save(usuario);
-                
+
                 String accion = !estadoActual ? "activado" : "deshabilitado";
                 redirectAttributes.addFlashAttribute("success", "Usuario " + usuario.getUsername() + " " + accion + " correctamente.");
             } else {
@@ -192,5 +194,28 @@ public class AppController {
         }
 
         return "redirect:/admin/usuarios";
+    }
+
+    // NUEVO ENDPOINT PARA RESTABLECER CONTRASEÑA (JSON)
+    @PostMapping("/reset-password")
+    @ResponseBody // Indica que devuelve datos (JSON), no una vista HTML
+    public ResponseEntity<Map<String, String>> resetPassword(
+            @RequestParam String email,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaNacimiento,
+            @RequestParam String newPassword) {
+
+        Map<String, String> response = new HashMap<>();
+
+        boolean exito = usuarioService.restablecerContrasena(email, fechaNacimiento, newPassword);
+
+        if (exito) {
+            response.put("status", "success");
+            response.put("message", "Contraseña actualizada correctamente.");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("status", "error");
+            response.put("message", "Los datos no coinciden con ningún usuario.");
+            return ResponseEntity.status(400).body(response);
+        }
     }
 }
