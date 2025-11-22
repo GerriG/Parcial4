@@ -136,6 +136,37 @@ public class AppController {
         model.addAttribute("listaUsuarios", usuarioRepository.findAll());
         return "admin_usuarios";
     }
+    
+    // ----------------------------------------------------
+    // 4. CAMBIAR ESTADO DE USUARIO (ACTIVAR/DESHABILITAR)
+    // ----------------------------------------------------
+    @GetMapping("/admin/toggle/{id}")
+    public String toggleEstadoUsuario(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            Usuario usuario = usuarioRepository.findById(id).orElse(null);
+            
+            if (usuario != null) {
+                // CORRECCIÓN APLICADA
+                // Usamos getEstado() y envolvemos en una verificación safe por si el Boolean fuera null
+                boolean estadoActual = Boolean.TRUE.equals(usuario.getEstado());
+                
+                // Invertimos el estado (true a false, o viceversa)
+                usuario.setEstado(!estadoActual);
+                
+                usuarioRepository.save(usuario);
+                
+                String accion = !estadoActual ? "activado" : "deshabilitado";
+                redirectAttributes.addFlashAttribute("success", "Usuario " + usuario.getUsername() + " " + accion + " correctamente.");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Usuario no encontrado.");
+            }
+        } catch (Exception e) {
+            // Se puede registrar el error real para debug
+            System.err.println("ERROR AL CAMBIAR ESTADO DE USUARIO: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error al cambiar el estado del usuario.");
+        }
+        return "redirect:/admin/usuarios";
+    }
 
     @GetMapping("/admin/eliminar/{id}")
     public String eliminarUsuario(@PathVariable Long id, RedirectAttributes redirectAttributes) {

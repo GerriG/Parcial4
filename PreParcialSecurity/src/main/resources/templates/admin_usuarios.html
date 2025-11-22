@@ -7,78 +7,99 @@
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <link rel="stylesheet" th:href="@{/css/Admin.css}">
+    <link rel="stylesheet" th:href="@{/css/Administrar.css}">
 
     <style>
-        /* 1. Contenedor Principal del Modal (Efecto Cristal) */
-        .swal2-popup {
-            backdrop-filter: blur(15px);
-            background: rgba(255, 255, 255, 0.25) !important; 
-            border-radius: 20px !important;
-            border: 1px solid rgba(255, 255, 255, 0.4) !important;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3) !important;
-            /* CAMBIO: Texto base blanco */
-            color: #ffffff !important; 
-        }
-        
-        /* 2. Títulos y Contenido */
-        .swal2-title {
-            /* CAMBIO: Título blanco */
-            color: #ffffff !important;
-            font-weight: 800 !important;
-        }
+            /* 1. Contenedor Principal del Modal (Efecto Cristal) */
+            .swal2-popup {
+                backdrop-filter: blur(15px);
+                background: rgba(255, 255, 255, 0.25) !important;
+                border-radius: 20px !important;
+                border: 1px solid rgba(255, 255, 255, 0.4) !important;
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3) !important;
+                /* Texto base blanco */
+                color: #ffffff !important;
+            }
 
-        /* CAMBIO: Asegura que el texto del cuerpo (mensaje) sea blanco */
-        .swal2-html-container {
-            color: #ffffff !important;
-        }
+            /* 2. Títulos y Contenido */
+            .swal2-title {
+                /* Título blanco */
+                color: #ffffff !important;
+                font-weight: 800 !important;
+            }
 
-        /* 3. Botón de Confirmación */
-        .swal2-styled.swal2-confirm {
-            background: linear-gradient(135deg, #a36bff, #7c4dff) !important; 
-            color: white !important;
-            border-radius: 25px !important;
-            font-weight: 700 !important;
-            padding: 10px 25px !important;
-            border: none !important;
-            box-shadow: 0 4px 15px rgba(163, 107, 255, 0.4) !important;
-        }
+            /* Asegura que el texto del cuerpo (mensaje) sea blanco */
+            .swal2-html-container {
+                color: #ffffff !important;
+            }
 
-        .swal2-styled.swal2-confirm:hover {
-            background: linear-gradient(135deg, #7c4dff, #6230e7) !important;
-        }
+            /* 3. Botón de Confirmación */
+            .swal2-styled.swal2-confirm {
+                background: linear-gradient(135deg, #a36bff, #7c4dff) !important;
+                color: white !important;
+                border-radius: 25px !important;
+                font-weight: 700 !important;
+                padding: 10px 25px !important;
+                border: none !important;
+                box-shadow: 0 4px 15px rgba(163, 107, 255, 0.4) !important;
+            }
 
-        /* 4. Botón de Cancelación */
-        .swal2-styled.swal2-cancel {
-            background: rgba(255, 255, 255, 0.3) !important; 
-            backdrop-filter: blur(8px) !important;
-            /* CAMBIO: Texto blanco en botón cancelar */
-            color: #ffffff !important;
-            border: 1px solid rgba(255, 255, 255, 0.6) !important;
-            border-radius: 25px !important;
-            font-weight: 600 !important;
-            padding: 10px 25px !important;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
-        }
-        
-        .swal2-styled.swal2-cancel:hover {
-            background: rgba(255, 255, 255, 0.5) !important;
-        }
+            .swal2-styled.swal2-confirm:hover {
+                background: linear-gradient(135deg, #7c4dff, #6230e7) !important;
+            }
 
-        /* --- CORRECCIÓN PARA EL ICONO (Eliminar capa transparente) --- */
-        /* 5. Corrección Iconos Animados en fondo transparente */
-        .swal2-icon, 
-        .swal2-success-fix, 
-        .swal2-success-circular-line-left, 
-        .swal2-success-circular-line-right {
-            background-color: transparent !important;
-        }
-        
-        /* Opcional: Si el anillo se ve mal, fuerza transparencia también */
-        .swal2-success-ring {
-            background-color: transparent !important; 
-        }
-    </style>
+            /* 4. Botón de Cancelación */
+            .swal2-styled.swal2-cancel {
+                background: rgba(255, 255, 255, 0.3) !important;
+                backdrop-filter: blur(8px) !important;
+                /* Texto blanco en botón cancelar */
+                color: #ffffff !important;
+                border: 1px solid rgba(255, 255, 255, 0.6) !important;
+                border-radius: 25px !important;
+                font-weight: 600 !important;
+                padding: 10px 25px !important;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+            }
+
+            .swal2-styled.swal2-cancel:hover {
+                background: rgba(255, 255, 255, 0.5) !important;
+            }
+
+            /* --- CORRECCIÓN PARA EL ICONO (Eliminar capa transparente) --- */
+            /* 5. Corrección Iconos Animados en fondo transparente */
+            .swal2-icon,
+            .swal2-success-fix,
+            .swal2-success-circular-line-left,
+            .swal2-success-circular-line-right {
+                background-color: transparent !important;
+            }
+
+            /* Opcional: Si el anillo se ve mal, fuerza transparencia también */
+            .swal2-success-ring {
+                background-color: transparent !important;
+            }
+
+            /* ================================================== */
+            /* 6. CORRECCIÓN DE DIMENSIONES PARA BOTONES DE ACCIÓN */
+            /* ================================================== */
+            
+            /* Fuerza el botón a ser un círculo perfecto de tamaño fijo */
+            .btn-sm.rounded-circle {
+                width: 34px; /* Un tamaño ligeramente más grande para el círculo */
+                height: 34px;
+                padding: 0 !important; /* Elimina el padding de btn-sm */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Fuerza el tamaño de la fuente de los iconos para que se vean uniformes dentro del círculo */
+            .delete-btn i,
+            .toggle-btn i {
+                font-size: 1em !important; /* Mantiene el tamaño base del font */
+                /* Opcional: para compensar glifos, puedes usar '1.1em' o '14px' */
+            }
+        </style>
 </head>
 <body>
 
@@ -133,12 +154,12 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <img th:if="${u.perfil != null and u.perfil.avatar != null}" 
-                                             th:src="@{${u.perfil.avatar}}" 
-                                             class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
-                                             
+                                            th:src="@{${u.perfil.avatar}}" 
+                                            class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+                                            
                                         <img th:if="${u.perfil == null or u.perfil.avatar == null}" 
-                                             th:src="@{/Profiles/default.jpg}" 
-                                             class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+                                            th:src="@{/Profiles/default.jpg}" 
+                                            class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
 
                                         <span th:text="${u.perfil != null ? u.perfil.nombre + ' ' + u.perfil.apellido : 'Sin perfil'}">Nombre</span>
                                     </div>
@@ -146,7 +167,7 @@
 
                                 <td>
                                     <span th:class="${u.rol?.name() == 'ADMINISTRADOR' ? 'badge bg-danger' : (u.rol != null ? 'badge bg-primary' : 'badge bg-secondary')}" 
-                                          th:text="${u.rol != null ? u.rol : 'Sin Rol'}">ROL</span>
+                                            th:text="${u.rol != null ? u.rol : 'Sin Rol'}">ROL</span>
                                 </td>
                                 <td>
                                     <span th:if="${u.estado}" class="text-success fw-bold" style="text-shadow: 0 0 10px rgba(255,255,255,0.8);">
@@ -157,12 +178,21 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="javascript:void(0);" 
-                                       th:attr="data-id=${u.idUsuario}"
-                                       class="btn btn-outline-danger btn-sm rounded-circle delete-btn"
-                                       title="Eliminar Usuario">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
+                                    <div class="d-flex justify-content-center">
+                                        <a href="javascript:void(0);" 
+                                            th:attr="data-id=${u.idUsuario}, data-estado=${u.estado}"
+                                            class="btn btn-outline-warning btn-sm rounded-circle toggle-btn me-2"
+                                            th:title="${u.estado} ? 'Deshabilitar Usuario' : 'Activar Usuario'">
+                                            <i th:class="${u.estado} ? 'fas fa-user-slash' : 'fas fa-user-check'"></i>
+                                        </a>
+
+                                        <a href="javascript:void(0);" 
+                                            th:attr="data-id=${u.idUsuario}"
+                                            class="btn btn-outline-danger btn-sm rounded-circle delete-btn"
+                                            title="Eliminar Usuario">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -181,29 +211,30 @@
             var msgSuccess = /*[[${success}]]*/ null;
             
             const swalTheme = {
-                confirmButtonColor: '#a36bff',
                 background: 'transparent', 
                 backdrop: `rgba(0,0,0,0.4)`
             };
 
-            // 1. Mostrar mensajes de éxito/error del controlador
+            // 1. Alertas del servidor
             if(msgSuccess){
                 Swal.fire({
                     ...swalTheme,
                     icon: 'success',
                     title: '¡Éxito!',
-                    text: msgSuccess
+                    text: msgSuccess,
+                    confirmButtonColor: '#a36bff'
                 });
             } else if(msgError){
                 Swal.fire({
                     ...swalTheme,
                     icon: 'error',
                     title: 'Error de Gestión',
-                    text: msgError
+                    text: msgError,
+                    confirmButtonColor: '#a36bff'
                 });
             } 
 
-            // 2. Manejar la confirmación de eliminación
+            // 2. Lógica para ELIMINAR (Botón Rojo)
             document.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const userId = this.getAttribute('data-id');
@@ -211,16 +242,55 @@
 
                     Swal.fire({
                         ...swalTheme,
-                        title: '¿Estás seguro?',
-                        text: "¡No podrás revertir esta acción!",
+                        title: '¿Eliminar permanentemente?',
+                        text: "Esta acción borrará el usuario y su perfil. ¡No se puede deshacer!",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonText: 'Sí, eliminar',
                         cancelButtonText: 'Cancelar',
-                        reverseButtons: true
+                        reverseButtons: true,
+                        customClass: {
+                            confirmButton: 'confirm-delete' // Estilo morado/rojo
+                        }
                     }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = deleteUrl;
+                        }
+                    });
+                });
+            });
+
+            // 3. Lógica para DESHABILITAR/ACTIVAR (Botón Amarillo)
+            document.querySelectorAll('.toggle-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = this.getAttribute('data-id');
+                    // Thymeleaf renderiza 'true' o 'false' como texto en JS
+                    const isUserActive = this.getAttribute('data-estado') === 'true'; 
+                    const toggleUrl = '/admin/toggle/' + userId;
+
+                    // Definimos textos dinámicos
+                    const titleText = isUserActive ? '¿Deshabilitar Usuario?' : '¿Activar Usuario?';
+                    const bodyText = isUserActive 
+                        ? 'El usuario no podrá iniciar sesión hasta que sea reactivado.' 
+                        : 'El usuario podrá volver a acceder al sistema.';
+                    const confirmText = isUserActive ? 'Sí, deshabilitar' : 'Sí, activar';
+                    const iconType = isUserActive ? 'warning' : 'question';
+
+                    Swal.fire({
+                        ...swalTheme,
+                        title: titleText,
+                        text: bodyText,
+                        icon: iconType,
+                        showCancelButton: true,
+                        confirmButtonText: confirmText,
+                        cancelButtonText: 'Cancelar',
+                        reverseButtons: true,
+                        customClass: {
+                            confirmButton: 'confirm-toggle' // Estilo amarillo
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = toggleUrl;
                         }
                     });
                 });

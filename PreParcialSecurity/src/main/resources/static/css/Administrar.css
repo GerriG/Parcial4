@@ -1,11 +1,14 @@
 /* =========================================
-   1. ESTILO GENERAL Y FONDO ANIMADO
+   ESTILOS PARA EL PANEL DE ADMINISTRACIÓN (Glassmorphism)
    ========================================= */
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,700');
+
 body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    font-family: "Segoe UI", "Segoe UI Emoji", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     color: #333;
     background: linear-gradient(-45deg, #7eb4ff, #a674ff, #5dc8ff, #8d7aff);
     background-size: 400% 400%;
@@ -17,34 +20,6 @@ body {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
-}
-
-/* =========================================
-   2. NAVBAR (Glassmorphism - Acrílico)
-   ========================================= */
-.navbar-glass {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    padding: 15px 0;
-}
-
-.navbar-brand {
-    font-weight: 800;
-    letter-spacing: 1px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.btn-outline-light {
-    border-color: rgba(255, 255, 255, 0.6);
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(4px);
-}
-.btn-outline-light:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: white;
 }
 
 /* =========================================
@@ -75,7 +50,6 @@ body {
     margin-bottom: 0;
     color: #333;
     vertical-align: middle;
-    /* NUEVO: Centra todo el texto por defecto */
     text-align: center;
 }
 
@@ -90,7 +64,6 @@ body {
     font-size: 0.85rem;
     padding: 15px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    /* Hereda el centrado del padre (.table) */
 }
 
 /* Celdas del cuerpo */
@@ -101,14 +74,12 @@ body {
 }
 
 /* === EXCEPCIÓN: COLUMNA 3 (Nombre Completo) === */
-/* Usamos nth-child(3) para apuntar a la columna de Nombre */
 .table th:nth-child(3),
 .table td:nth-child(3) {
-    text-align: left;      /* Alineación a la izquierda */
-    padding-left: 40px;    /* Un poco de sangría para que se vea elegante */
+    text-align: left;
+    padding-left: 40px;
 }
 
-/* Aseguramos que el contenedor flex (avatar+texto) se alinee a la izquierda */
 .table td:nth-child(3) .d-flex {
     justify-content: flex-start;
 }
@@ -138,11 +109,13 @@ body {
     transform: translateY(-2px);
 }
 
+/* --- BOTÓN DANGER (ROJO) --- */
 .btn-outline-danger {
     border-color: #ff6b6b;
     color: #c0392b;
     background: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
 }
 
 .btn-outline-danger:hover {
@@ -150,6 +123,22 @@ body {
     color: white;
     box-shadow: 0 4px 10px rgba(255, 107, 107, 0.4);
     transform: scale(1.1);
+}
+
+/* --- BOTÓN WARNING (AMARILLO - NUEVO) --- */
+.btn-outline-warning {
+    border-color: #ffc107;      /* Amarillo estándar */
+    color: #b38f00;             /* Amarillo oscuro para texto (legibilidad) */
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+}
+
+.btn-outline-warning:hover {
+    background-color: #ffc107;  /* Fondo amarillo al pasar mouse */
+    color: white;               /* Texto blanco */
+    box-shadow: 0 4px 10px rgba(255, 193, 7, 0.4); /* Sombra amarilla suave */
+    transform: scale(1.1);      /* Efecto de zoom idéntico al danger */
 }
 
 .rounded-circle {
