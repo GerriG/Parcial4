@@ -57,9 +57,12 @@ public class AppController {
                                @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaNacimiento,
                                RedirectAttributes redirectAttributes) {
         try {
+            // ... (Tu lógica de validación de usuario existente) ...
             if (usuarioRepository.findByUsername(usuario.getUsername()).isPresent()) {
-                redirectAttributes.addFlashAttribute("error", "El usuario ya existe.");
-                return "redirect:/login?error";
+                // Cambiamos "error" por "errorRegistro" para saber dónde mostrarlo
+                redirectAttributes.addFlashAttribute("errorRegistro", "El usuario ya existe.");
+                redirectAttributes.addFlashAttribute("mostrarRegistro", true); // <--- NUEVA SEÑAL
+                return "redirect:/login";
             }
 
             Perfil perfil = new Perfil();
@@ -68,7 +71,7 @@ public class AppController {
             perfil.setEmail(email);
             perfil.setFechaNacimiento(fechaNacimiento);
 
-            usuario.setRol(Rol.USUARIO); // Siempre USUARIO
+            usuario.setRol(Rol.USUARIO);
 
             usuarioService.registrarUsuario(usuario, perfil);
 
@@ -76,12 +79,22 @@ public class AppController {
             return "redirect:/login";
 
         } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/login?error";
+            // CAPTURAMOS ERRORES DE VALIDACIÓN (EDAD, PASSWORD, FECHA)
+            redirectAttributes.addFlashAttribute("errorRegistro", e.getMessage());
+            redirectAttributes.addFlashAttribute("mostrarRegistro", true); // <--- IMPORTANTE
+            
+            // Opcional: Devolver los datos para que no tenga que escribirlos de nuevo
+            redirectAttributes.addFlashAttribute("oldNombre", nombre);
+            redirectAttributes.addFlashAttribute("oldApellido", apellido);
+            redirectAttributes.addFlashAttribute("oldEmail", email);
+            
+            return "redirect:/login"; // Redirige, pero con la orden de abrir el registro
+            
         } catch (Exception e) {
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Error técnico: " + e.getMessage());
-            return "redirect:/login?error";
+            redirectAttributes.addFlashAttribute("errorRegistro", "Error técnico: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("mostrarRegistro", true);
+            return "redirect:/login";
         }
     }
 

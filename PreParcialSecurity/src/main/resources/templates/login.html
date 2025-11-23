@@ -46,11 +46,11 @@
         <div class="glass-body">
             <div class="tab-content" id="pills-tabContent">
                 
+                <!-- ================= LOGIN ================= -->
                 <div class="tab-pane fade show active" id="pills-login" role="tabpanel">
                     
                     <!-- ALERTAS -->
                     
-                    <!-- Cuenta Desactivada -->
                     <div th:if="${param.disabled}" class="alert-glass warning">
                         <i class="fas fa-user-lock me-3 fs-4"></i> 
                         <div>
@@ -59,8 +59,6 @@
                         </div>
                     </div>
 
-                    <!-- NUEVA ALERTA: Sesión Expirada por Concurrencia -->
-                    <!-- Esta alerta sale cuando 'expiredUrl' de SecurityConfig redirige aquí -->
                     <div th:if="${param['session-expired']}" class="alert-glass warning">
                         <i class="fas fa-clock me-3 fs-4"></i>
                         <div>
@@ -69,15 +67,12 @@
                         </div>
                     </div>
 
-                    <!-- Error de Login -->
                     <div th:if="${param.error} and ${param.disabled == null} and ${error == null} and ${param['session-expired'] == null}" class="alert-glass">
                         <i class="fas fa-exclamation-circle me-2"></i> Credenciales incorrectas.
                     </div>
 
-                    <!-- Error Personalizado (viene del Controller) -->
                     <div th:if="${error}" class="alert-glass" th:text="${error}"></div>
 
-                    <!-- Mensajes de Éxito -->
                     <div th:if="${success}" class="alert-glass success">
                         <i class="fas fa-check-circle me-2"></i> <span th:text="${success}"></span>
                     </div>
@@ -108,15 +103,22 @@
                     </form>
                 </div>
 
+                <!-- ================= REGISTRO ================= -->
                 <div class="tab-pane fade" id="pills-register" role="tabpanel">
-                    
-                    <div th:if="${error}" class="alert-glass" th:text="${error}"></div>
+
+                    <!-- ✅ NUEVA ALERTA DE REGISTRO -->
+                    <div th:if="${errorRegistro}" class="alert alert-danger" role="alert" 
+                         style="color: red; font-size: 0.9em; margin-bottom: 10px;">
+                        <span th:text="${errorRegistro}"></span>
+                    </div>
 
                     <form th:action="@{/register}" method="post">
+
                         <div class="row g-2 mb-2">
                             <div class="col-6">
                                 <div class="form-floating">
-                                    <input type="text" name="nombre" class="form-control" id="regNombre" placeholder="Nombre" required>
+                                    <input type="text" name="nombre" class="form-control" id="regNombre" placeholder="Nombre" 
+                                           th:value="${oldNombre}">
                                     <label for="regNombre">Nombre</label>
                                 </div>
                             </div>
@@ -151,7 +153,6 @@
                         <div class="form-floating mb-3">
                             <input type="password" name="password" class="form-control" id="regPass" placeholder="Contraseña" required>
                             <label for="regPass">Contraseña</label>
-                            <!-- Ayuda visual para validación de password en registro -->
                             <div class="form-text small text-muted mt-1">
                                 <i class="fas fa-info-circle me-1"></i> Mínimo 8 caracteres, una mayúscula y un número.
                             </div>
@@ -193,19 +194,21 @@
             const current = html.getAttribute('data-bs-theme');
             setTheme(current === 'dark' ? 'light' : 'dark');
         });
-
-        function olvidePassword() {
-            const isDark = html.getAttribute('data-bs-theme') === 'dark';
-            Swal.fire({
-                title: 'Recuperación de Cuenta',
-                text: 'Por motivos de seguridad, por favor contacta a un Administrador para restablecer tu contraseña.',
-                icon: 'info',
-                confirmButtonText: 'Entendido',
-                confirmButtonColor: '#4e73df',
-                background: isDark ? '#1e1e2f' : '#ffffff',
-                color: isDark ? '#ffffff' : '#333333'
-            });
-        }
     </script>
+
+    <!-- ✅ SCRIPT PARA ACTIVAR REGISTRO AUTOMÁTICAMENTE -->
+    <script th:inline="javascript">
+        window.onload = function() {
+            var mostrarRegistro = /*[[${mostrarRegistro}]]*/ false;
+            
+            if (mostrarRegistro) {
+                var registroTab = document.getElementById('pills-register-tab');
+                if (registroTab) {
+                    registroTab.click();
+                }
+            }
+        };
+    </script>
+
 </body>
 </html>

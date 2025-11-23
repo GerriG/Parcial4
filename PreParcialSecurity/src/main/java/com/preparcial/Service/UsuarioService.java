@@ -13,8 +13,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+// 1. AGREGAR ESTOS IMPORTS
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.UUID;
-import java.util.regex.Pattern; // Necesario para regex
+import java.util.regex.Pattern;
 
 @Service
 public class UsuarioService {
@@ -27,12 +30,10 @@ public class UsuarioService {
 
     private final String UPLOAD_DIR = "src/main/resources/static/Profiles/";
 
-    // Método helper para validar contraseña (NUEVO)
     public void validarPasswordSeguro(String password) {
         if (password.length() < 8) {
             throw new IllegalArgumentException("La contraseña debe tener al menos 8 caracteres.");
         }
-        // Regex: Al menos una mayúscula, al menos un número
         if (!Pattern.matches(".*[A-Z].*", password)) {
             throw new IllegalArgumentException("La contraseña debe contener al menos una letra mayúscula.");
         }
@@ -41,9 +42,32 @@ public class UsuarioService {
         }
     }
 
+    // 2. NUEVO MÉTODO DE VALIDACIÓN DE FECHA
+    public void validarFechaNacimiento(LocalDate fechaNacimiento) {
+        if (fechaNacimiento == null) {
+            throw new IllegalArgumentException("La fecha de nacimiento es obligatoria.");
+        }
+
+        LocalDate fechaActual = LocalDate.now();
+
+        // Validar que no sea fecha futura
+        if (fechaNacimiento.isAfter(fechaActual)) {
+            throw new IllegalArgumentException("La fecha de nacimiento no puede ser futura.");
+        }
+
+        // Validar edad mínima (12 años)
+        int edad = Period.between(fechaNacimiento, fechaActual).getYears();
+        if (edad < 12) {
+            throw new IllegalArgumentException("Debes tener al menos 12 años para registrarte.");
+        }
+    }
+
     public void registrarUsuario(Usuario usuario, Perfil perfil) {
-        // Validamos también al registrar (Opcional, pero recomendado)
+        // Validamos contraseña
         validarPasswordSeguro(usuario.getPassword());
+        
+        // 3. LLAMAR A LA VALIDACIÓN AQUÍ
+        validarFechaNacimiento(perfil.getFechaNacimiento());
 
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         usuario.setEstado(true);
@@ -73,18 +97,15 @@ public class UsuarioService {
         }
 
         if (datosFormulario.getFechaNacimiento() != null) {
+            // Opcional: Validar también al editar perfil
+            validarFechaNacimiento(datosFormulario.getFechaNacimiento());
             perfilBD.setFechaNacimiento(datosFormulario.getFechaNacimiento());
         }
 
-        // --- VALIDACIÓN DE CONTRASEÑA MEJORADA ---
         if (nuevoPassword != null && !nuevoPassword.isEmpty()) {
-            // 1. Validamos reglas de seguridad
             validarPasswordSeguro(nuevoPassword);
-            
-            // 2. Si pasa, encriptamos y guardamos
             usuarioBD.setPassword(passwordEncoder.encode(nuevoPassword));
         }
-        // ------------------------------------------
 
         if (!archivoAvatar.isEmpty()) {
             Path rutaDirectorio = Paths.get(UPLOAD_DIR);
