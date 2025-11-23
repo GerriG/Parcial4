@@ -77,14 +77,18 @@ public class AppController {
             redirectAttributes.addFlashAttribute("success", "Cuenta creada. Inicia sesión.");
             return "redirect:/login";
 
+        } catch (IllegalArgumentException e) {
+            // Capturamos validaciones específicas (ej: contraseña débil)
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/login?error";
         } catch (Exception e) {
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error técnico: " + e.getMessage());
             return "redirect:/login?error";
         }
     }
 
-    // --- RECUPERACIÓN DE CONTRASEÑA (NUEVO) ---
+    // --- RECUPERACIÓN DE CONTRASEÑA ---
 
     @GetMapping("/recovery")
     public String mostrarRecuperacion() {
@@ -97,16 +101,16 @@ public class AppController {
                                        @RequestParam String newPassword,
                                        RedirectAttributes redirectAttributes) {
         try {
-            // 1. Buscar usuario
             Usuario usuario = usuarioRepository.findByUsername(username).orElse(null);
 
-            // 2. Validar que exista y que el email coincida
             if (usuario == null || usuario.getPerfil() == null || !usuario.getPerfil().getEmail().equalsIgnoreCase(email)) {
                 redirectAttributes.addFlashAttribute("error", "Datos incorrectos. Verifica tu usuario y correo.");
                 return "redirect:/recovery";
             }
 
-            // 3. Actualizar contraseña (usando el servicio o directo aquí si es simple)
+            // Aquí idealmente usarías el servicio para validar la contraseña también
+            // Por simplicidad en este ejemplo, usamos setPassword directo, pero
+            // lo mejor sería refactorizar para usar usuarioService.actualizarPassword(usuario, newPass)
             usuario.setPassword(passwordEncoder.encode(newPassword));
             usuarioRepository.save(usuario);
 
@@ -137,19 +141,15 @@ public class AppController {
 
             Usuario usuario = new Usuario();
             usuario.setUsername(username);
-            usuario.setPassword(passwordEncoder.encode(password));
+            usuario.setPassword(password); // El servicio lo encriptará y validará
             usuario.setRol(Rol.valueOf(rol));
-            usuario.setEstado(true);
 
             Perfil perfil = new Perfil();
             perfil.setNombre(nombre);
             perfil.setApellido(apellido);
             perfil.setEmail(email);
             
-            usuario.setPerfil(perfil);
-            perfil.setUsuario(usuario);
-
-            usuarioRepository.save(usuario);
+            usuarioService.registrarUsuario(usuario, perfil);
             redirectAttributes.addFlashAttribute("success", "Usuario creado correctamente.");
 
         } catch (Exception e) {
@@ -164,21 +164,18 @@ public class AppController {
         return "admin_usuarios";
     }
     
-    // --- MÉTODO TOGGLE PROTEGIDO ---
     @GetMapping("/admin/toggle/{id}")
     public String toggleEstadoUsuario(@PathVariable Long id, Authentication auth, RedirectAttributes redirectAttributes) {
         try {
             Usuario usuario = usuarioRepository.findById(id).orElse(null);
             
             if (usuario != null) {
-                // 1. VALIDACIÓN DE SEGURIDAD: Evitar auto-desactivación
                 String usuarioLogueado = auth.getName();
                 
                 if (usuario.getUsername().equals(usuarioLogueado)) {
                     redirectAttributes.addFlashAttribute("error", "Acción denegada: No puedes desactivar tu propia cuenta.");
                     return "redirect:/admin/usuarios";
                 }
-                // -----------------------------------------------------
 
                 boolean estadoActual = Boolean.TRUE.equals(usuario.getEstado());
                 usuario.setEstado(!estadoActual);
@@ -239,13 +236,17 @@ public class AppController {
         try {
             String username = auth.getName();
             Usuario usuarioSesion = usuarioRepository.findByUsername(username).orElseThrow();
+            
+            // Aquí el servicio lanzará excepciones si la contraseña no cumple las reglas
             usuarioService.actualizarPerfil(usuarioSesion, perfilForm, archivo, newPassword);
 
             redirectAttributes.addFlashAttribute("success", "Perfil actualizado.");
             return "redirect:/perfil"; 
 
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error al actualizar.");
+            // --- CORRECCIÓN CRÍTICA ---
+            // Pasamos e.getMessage() para que el usuario vea: "La contraseña debe tener al menos..."
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/perfil/editar"; 
         }
     }

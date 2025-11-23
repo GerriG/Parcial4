@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
+import java.util.regex.Pattern; // Necesario para regex
 
 @Service
 public class UsuarioService {
@@ -24,10 +25,26 @@ public class UsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // CORRECCIÓN: Apuntar a 'Profiles' para coincidir con WebConfig
     private final String UPLOAD_DIR = "src/main/resources/static/Profiles/";
 
+    // Método helper para validar contraseña (NUEVO)
+    private void validarPasswordSeguro(String password) {
+        if (password.length() < 8) {
+            throw new IllegalArgumentException("La contraseña debe tener al menos 8 caracteres.");
+        }
+        // Regex: Al menos una mayúscula, al menos un número
+        if (!Pattern.matches(".*[A-Z].*", password)) {
+            throw new IllegalArgumentException("La contraseña debe contener al menos una letra mayúscula.");
+        }
+        if (!Pattern.matches(".*\\d.*", password)) {
+            throw new IllegalArgumentException("La contraseña debe contener al menos un número.");
+        }
+    }
+
     public void registrarUsuario(Usuario usuario, Perfil perfil) {
+        // Validamos también al registrar (Opcional, pero recomendado)
+        validarPasswordSeguro(usuario.getPassword());
+
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         usuario.setEstado(true);
         
@@ -40,11 +57,9 @@ public class UsuarioService {
     }
 
     public void actualizarPerfil(Usuario usuarioSesion, Perfil datosFormulario, MultipartFile archivoAvatar, String nuevoPassword) throws IOException {
-        // 1. Recuperar datos actuales de la BD
         Usuario usuarioBD = usuarioRepository.findById(usuarioSesion.getIdUsuario()).orElseThrow();
         Perfil perfilBD = usuarioBD.getPerfil();
 
-        // 2. Actualizar campos SOLO si no vienen nulos o vacíos
         if (datosFormulario.getNombre() != null && !datosFormulario.getNombre().isEmpty()) {
             perfilBD.setNombre(datosFormulario.getNombre());
         }
@@ -57,17 +72,20 @@ public class UsuarioService {
             perfilBD.setEmail(datosFormulario.getEmail());
         }
 
-        // Actualizar fecha solo si el usuario seleccionó una nueva
         if (datosFormulario.getFechaNacimiento() != null) {
             perfilBD.setFechaNacimiento(datosFormulario.getFechaNacimiento());
         }
 
-        // 3. Actualizar contraseña (solo si se escribió una nueva)
+        // --- VALIDACIÓN DE CONTRASEÑA MEJORADA ---
         if (nuevoPassword != null && !nuevoPassword.isEmpty()) {
+            // 1. Validamos reglas de seguridad
+            validarPasswordSeguro(nuevoPassword);
+            
+            // 2. Si pasa, encriptamos y guardamos
             usuarioBD.setPassword(passwordEncoder.encode(nuevoPassword));
         }
+        // ------------------------------------------
 
-        // 4. Manejo de Imagen
         if (!archivoAvatar.isEmpty()) {
             Path rutaDirectorio = Paths.get(UPLOAD_DIR);
             if (!Files.exists(rutaDirectorio)) {
@@ -77,10 +95,7 @@ public class UsuarioService {
             String nombreArchivo = UUID.randomUUID().toString() + "_" + archivoAvatar.getOriginalFilename();
             Path rutaArchivo = rutaDirectorio.resolve(nombreArchivo);
             
-            // Guardar físicamente en la carpeta 'Profiles'
             Files.write(rutaArchivo, archivoAvatar.getBytes());
-            
-            // Guardar la ruta URL en la BD (WebConfig mapea /uploads/** -> carpeta Profiles)
             perfilBD.setAvatar("/uploads/" + nombreArchivo);
         }
 

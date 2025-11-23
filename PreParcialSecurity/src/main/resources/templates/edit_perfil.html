@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     
+    <!-- 1. Agregamos SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <link rel="stylesheet" th:href="@{/css/Home.css}">
 </head>
 <body>
@@ -51,14 +54,7 @@
                 </a>
             </div>
 
-            <div th:if="${success}" class="alert alert-success border-0 shadow-sm d-flex align-items-center mb-4">
-                <i class="fas fa-check-circle fs-4 me-3 text-success"></i>
-                <div><strong class="d-block">¡Éxito!</strong><span th:text="${success}"></span></div>
-            </div>
-            <div th:if="${error}" class="alert alert-danger border-0 shadow-sm d-flex align-items-center mb-4">
-                <i class="fas fa-exclamation-circle fs-4 me-3 text-danger"></i>
-                <div><strong class="d-block">Error</strong><span th:text="${error}"></span></div>
-            </div>
+            <!-- 2. Eliminamos las alertas estáticas (divs) para usar SweetAlert -->
 
             <form th:action="@{/perfil/guardar}" method="post" enctype="multipart/form-data" th:object="${perfil}" class="modern-card">
                 <div class="row g-0">
@@ -128,7 +124,7 @@
                                     <label for="floatingPass">Nueva Contraseña (Opcional)</label>
                                 </div>
                                 <div class="form-text ms-2 mt-2 text-muted">
-                                    <i class="fas fa-info-circle me-1"></i> Déjalo en blanco si no deseas cambiar tu clave actual.
+                                    <i class="fas fa-shield-alt me-1"></i> Requisitos: Mínimo 8 caracteres, 1 mayúscula, 1 número.
                                 </div>
                             </div>
                         </div>
@@ -180,6 +176,45 @@
                 setTheme(current === 'dark' ? 'light' : 'dark');
             });
         });
+    </script>
+
+    <!-- 3. Script para SweetAlert (Manejo de Errores y Éxito) -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        // Capturamos las variables de Thymeleaf
+        const successMsg = /*[[${success}]]*/ null;
+        const errorMsg = /*[[${error}]]*/ null;
+        const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+
+        const swalConfig = {
+            background: isDark ? '#1e1e2f' : '#ffffff',
+            color: isDark ? '#ffffff' : '#333333'
+        };
+
+        if (successMsg) {
+            Swal.fire({
+                ...swalConfig,
+                icon: 'success',
+                title: '¡Perfil Actualizado!',
+                text: successMsg,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Excelente'
+            });
+        }
+
+        if (errorMsg) {
+            Swal.fire({
+                ...swalConfig,
+                icon: 'error',
+                title: 'Error de Validación',
+                text: errorMsg,
+                // Aquí cumplimos tu requerimiento de mencionar las reglas:
+                footer: '<div class="text-start small"><i class="fas fa-info-circle me-1"></i> <strong>Reglas de contraseña:</strong><br>• Mínimo 8 caracteres<br>• Al menos 1 mayúscula<br>• Al menos 1 número</div>',
+                confirmButtonColor: '#dc3545',
+                confirmButtonText: 'Intentar de nuevo'
+            });
+        }
+        /*]]>*/
     </script>
 </body>
 </html>

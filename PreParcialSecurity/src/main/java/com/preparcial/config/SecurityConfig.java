@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -22,7 +23,7 @@ public class SecurityConfig {
                 // Recursos estáticos
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**", "/Profiles/**").permitAll()
                 // Login y Registro públicos
-                .requestMatchers("/login", "/register").permitAll()
+                .requestMatchers("/login", "/register", "/recovery/**").permitAll()
                 
                 // --- RESTAURADO AL ORIGINAL ---
                 // Usamos "ROLE_ADMINISTRADOR" porque así funcionaba tu código original
@@ -42,7 +43,16 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
+                .invalidateHttpSession(true) // Invalida sesión al salir
+                .deleteCookies("JSESSIONID") // Borra la cookie
                 .permitAll()
+            )
+            // --- NUEVO BLOQUE DE GESTIÓN DE SESIONES (Requerimiento Examen) ---
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Crea sesión solo si es necesario
+                .invalidSessionUrl("/login?expired") // Redirige si la sesión caduca
+                .maximumSessions(1) // Opcional: Solo 1 dispositivo conectado a la vez
+                .expiredUrl("/login?session-expired") // Si entra otro, saca al primero
             );
         
         return http.build();
