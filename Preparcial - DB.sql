@@ -49,14 +49,4 @@ INSERT INTO `perfiles` (`id_perfil`, `nombre`, `apellido`, `email`, `fecha_nacim
 (1, 'Admin', 'Admin', 'admin@admin.com', '2005-04-17', '/uploads/5ba7a251-99eb-497c-bf95-42e1f976b401_133969316527262984.jpg', 1),
 (2, 'Usuario', 'Usuario', 'Usuario@Usuario.com', '2012-12-12', '/uploads/6e43e288-6b77-48dc-a3bc-75eb8433ca58_133817347908392708_1366_768.jpg', 2);
 
--- 7. Crear Trigger (Borrado Viceversa)
-DELIMITER $$
-CREATE TRIGGER `borrar_usuario_al_borrar_perfil` 
-AFTER DELETE ON `perfiles` 
-FOR EACH ROW 
-BEGIN
-    DELETE FROM `usuarios` WHERE `id_usuario` = OLD.usuario_id;
-END$$
-DELIMITER ;
-
 COMMIT;
