@@ -3,444 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenido - SecurityApp</title>
+    <title>Acceso Seguro | SecurityApp</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/css/Styles.css}">
-
-    <style>
-        /* =========================================
-           ESTILOS DEL MODAL
-           ========================================= */
-        
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-card {
-            background: #ffffff;
-            border-radius: 25px;
-            padding: 45px 40px;
-            width: 420px;
-            max-width: 90%;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            transform: scale(0.9) translateY(20px);
-            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        .modal-overlay.active .modal-card {
-            transform: scale(1) translateY(0);
-        }
-
-        .modal-icon {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            background: -webkit-linear-gradient(#a36bff, #7c4dff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 10px rgba(163, 107, 255, 0.3));
-        }
-
-        .modal-card h2 {
-            color: #2c3e50;
-            font-weight: 800;
-            font-size: 1.8rem;
-            margin: 0 0 10px 0;
-        }
-
-        .modal-card p {
-            color: #6c757d;
-            font-size: 0.95rem;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-
-        .input-group {
-            position: relative;
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .input-group i {
-            position: absolute;
-            top: 50%;
-            left: 15px;
-            transform: translateY(-50%);
-            color: #a36bff;
-            font-size: 1.1rem;
-            z-index: 10;
-        }
-
-        .modal-card input {
-            background: #f4f7f6;
-            border: 2px solid #f4f7f6;
-            color: #333;
-            padding: 12px 15px 12px 45px;
-            border-radius: 12px;
-            width: 100%;
-            font-size: 0.95rem;
-            font-weight: 500;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .modal-card input:focus {
-            background: #fff;
-            border-color: #a36bff;
-            box-shadow: 0 0 0 4px rgba(163, 107, 255, 0.15);
-        }
-
-        .btn-modal {
-            width: 100%;
-            padding: 14px;
-            border-radius: 50px;
-            border: none;
-            font-weight: 700;
-            font-size: 1rem;
-            color: white;
-            background: linear-gradient(135deg, #a36bff 0%, #7c4dff 100%);
-            box-shadow: 0 10px 20px rgba(124, 77, 255, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-modal:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(124, 77, 255, 0.4);
-        }
-
-        /* --- BOTÓN CERRAR (CÍRCULO PERFECTO CORREGIDO) --- */
-        .btn-close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            
-            /* Forzamos dimensiones cuadradas */
-            width: 35px !important;
-            height: 35px !important;
-            min-width: 35px !important;
-            min-height: 35px !important;
-            
-            /* Eliminamos estilos heredados conflictivos */
-            padding: 0 !important;
-            margin: 0 !important;
-            line-height: 35px !important; /* Centrado vertical antiguo */
-            
-            background: #f4f7f6;
-            border: none;
-            border-radius: 50%;
-            
-            /* Flexbox para centrado perfecto del icono */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            
-            color: #999;
-            cursor: pointer;
-            transition: all 0.2s;
-            z-index: 10;
-        }
-
-        .btn-close-modal i {
-            font-size: 16px; /* Tamaño controlado del icono */
-            line-height: 1;
-        }
-
-        .btn-close-modal:hover {
-            background: #e9ecef;
-            color: #333;
-            transform: rotate(90deg);
-        }
-
-        /* Alertas del Modal */
-        .modal-alert {
-            font-size: 0.85rem;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-        
-        .modal-alert.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .modal-alert.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <link rel="stylesheet" th:href="@{/css/Home.css}">
 </head>
-<body>
-    <div class="container" id="container">
+
+<body class="login-body">
+
+    <button class="theme-toggle-fixed" id="themeToggle" title="Cambiar aspecto">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="glass-card">
         
-        <div class="form-container sign-up-container">
-            <form th:action="@{/register}" method="post">
-                <h1>Crear Cuenta</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fas fa-user-circle"></i></a>
-                </div>
-                <span>Usa tu correo para registrarte</span>
-                
-                <input type="text" name="nombre" placeholder="Nombre" required />
-                <input type="text" name="apellido" placeholder="Apellido" required />
-                <input type="email" name="email" placeholder="Email" required />
-                
-                <div class="input-row">
-                    <input type="date" name="fechaNacimiento" required title="Fecha de Nacimiento" />
-                    <input type="text" name="username" placeholder="Usuario" required />
-                </div>
-
-                <input type="password" name="password" placeholder="Contraseña" required />
-
-                <div class="select-container">
-                    <select name="rolSeleccionado" required>
-                        <option value="USUARIO">Usuario</option>
-                        <option value="ADMINISTRADOR">Administrador</option>
-                    </select>
-                </div>
-
-                <button type="submit">Registrarse</button>
-            </form>
+        <div class="glass-header">
+            <div class="app-logo">
+                <i class="fas fa-shield-alt"></i> SecurityApp
+            </div>
+            <p class="text-muted small mb-0">Plataforma de gestión segura</p>
+            
+            <ul class="nav nav-pills nav-pills-custom" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login" type="button" role="tab">
+                        <i class="fas fa-sign-in-alt me-1"></i> Ingresar
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-register-tab" data-bs-toggle="pill" data-bs-target="#pills-register" type="button" role="tab">
+                        <i class="fas fa-user-plus me-1"></i> Registrarse
+                    </button>
+                </li>
+            </ul>
         </div>
 
-        <div class="form-container sign-in-container">
-            <form id="formLogin" th:action="@{/login}" method="post">
-                <h1>Iniciar Sesión</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fas fa-lock"></i></a>
-                </div>
-                <span>o usa tu cuenta</span>
+        <div class="glass-body">
+            <div class="tab-content" id="pills-tabContent">
                 
-                <div id="alertError" class="alert-compact error" style="display: none;">
-                    <i class="fas fa-exclamation-circle"></i> Datos incorrectos
-                </div>
-                <div id="alertDisabled" class="alert-compact error" style="display: none; border-color: #ffbb33; background-color: #fff8e1; color: #856404;">
-                    <i class="fas fa-user-slash"></i> Tu cuenta está deshabilitada.
-                </div>
-                <div th:if="${success}" class="alert-compact success" th:text="${success}"></div>
-                <div th:if="${param.logout}" class="alert-compact success">Sesión cerrada</div>
+                <div class="tab-pane fade show active" id="pills-login" role="tabpanel">
+                    
+                    <div th:if="${param.disabled}" class="alert-glass warning">
+                        <i class="fas fa-user-lock me-3 fs-4"></i> 
+                        <div>
+                            <strong>Cuenta desactivada.</strong><br>
+                            <small>Contacte a un administrador.</small>
+                        </div>
+                    </div>
 
-                <input type="text" name="username" placeholder="Usuario" required />
-                <input type="password" name="password" placeholder="Contraseña" required />
-                
-                <a href="#" class="forgot-pass" id="forgotPassLink">¿Olvidaste tu contraseña?</a>
-                
-                <button type="submit" id="btnLogin">Ingresar</button>
-            </form>
-        </div>
+                    <div th:if="${param.error} and ${param.disabled == null} and ${error == null}" class="alert-glass">
+                        <i class="fas fa-exclamation-circle me-2"></i> Credenciales incorrectas.
+                    </div>
 
-        <div class="overlay-container">
-            <div class="overlay">
-                <div class="overlay-panel overlay-left">
-                    <h1>¡Bienvenido!</h1>
-                    <p>Para mantenerte conectado, inicia sesión con tus datos personales</p>
-                    <button class="ghost" id="signIn">Iniciar Sesión</button>
+                    <div th:if="${success}" class="alert-glass success">
+                        <i class="fas fa-check-circle me-2"></i> <span th:text="${success}"></span>
+                    </div>
+
+                    <div th:if="${param.logout}" class="alert-glass success">
+                        <i class="fas fa-check me-2"></i> Sesión cerrada correctamente.
+                    </div>
+
+                    <form th:action="@{/login}" method="post">
+                        <div class="form-floating mb-3">
+                            <input type="text" name="username" class="form-control" id="loginUser" placeholder="Usuario" required>
+                            <label for="loginUser"><i class="fas fa-user me-1"></i> Usuario</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" name="password" class="form-control" id="loginPass" placeholder="Contraseña" required>
+                            <label for="loginPass"><i class="fas fa-lock me-1"></i> Contraseña</label>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="remember">
+                                <label class="form-check-label small text-muted" for="remember">Recordarme</label>
+                            </div>
+                            <a href="#" onclick="olvidePassword(); return false;" class="small text-decoration-none fw-bold">¿Olvidaste tu clave?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-gradient shadow-sm">INICIAR SESIÓN</button>
+                    </form>
                 </div>
-                <div class="overlay-panel overlay-right">
-                    <h1>¡Hola, Amigo!</h1>
-                    <p>Ingresa tus datos y comienza tu viaje con SecurityApp</p>
-                    <button class="ghost" id="signUp">Registrarse</button>
+
+                <div class="tab-pane fade" id="pills-register" role="tabpanel">
+                    
+                    <div th:if="${error}" class="alert-glass" th:text="${error}"></div>
+
+                    <form th:action="@{/register}" method="post">
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="text" name="nombre" class="form-control" id="regNombre" placeholder="Nombre" required>
+                                    <label for="regNombre">Nombre</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="text" name="apellido" class="form-control" id="regApellido" placeholder="Apellido" required>
+                                    <label for="regApellido">Apellido</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-2">
+                            <input type="email" name="email" class="form-control" id="regEmail" placeholder="Email" required>
+                            <label for="regEmail">Correo Electrónico</label>
+                        </div>
+
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="date" name="fechaNacimiento" class="form-control" id="regDate" required>
+                                    <label for="regDate">Fecha Nac.</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="text" name="username" class="form-control" id="regUser" placeholder="Usuario" required>
+                                    <label for="regUser">Usuario</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="password" name="password" class="form-control" id="regPass" placeholder="Contraseña" required>
+                            <label for="regPass">Contraseña</label>
+                        </div>
+
+                        <input type="hidden" name="rolSeleccionado" value="USUARIO"> 
+
+                        <button type="submit" class="btn btn-gradient shadow-sm">CREAR CUENTA</button>
+                        
+                        <div class="text-center mt-3">
+                            <small class="text-muted" style="font-size: 0.75rem;">
+                                Al registrarte aceptas los términos y condiciones de servicio.
+                            </small>
+                        </div>
+                    </form>
                 </div>
+
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="resetModal">
-        <div class="modal-card">
-            <button class="btn-close-modal" id="closeModal">
-                <i class="fas fa-times"></i>
-            </button>
-            
-            <div class="modal-icon">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-
-            <h2>Recuperar Acceso</h2>
-            <p>Ingresa tus datos de seguridad para establecer una nueva contraseña.</p>
-
-            <div id="modalSuccess" class="modal-alert success">
-                <i class="fas fa-check-circle"></i> ¡Listo! Contraseña actualizada.
-            </div>
-            <div id="modalError" class="modal-alert error">
-                <i class="fas fa-times-circle"></i> Los datos no coinciden.
-            </div>
-
-            <form id="formReset" style="background: transparent; padding: 0;">
-                
-                <div class="input-group">
-                    <i class="far fa-envelope"></i>
-                    <input type="email" name="email" placeholder="Correo Electrónico" required />
-                </div>
-
-                <div class="input-group">
-                    <i class="far fa-calendar-alt"></i>
-                    <input 
-                        type="text" 
-                        name="fechaNacimiento" 
-                        placeholder="Fecha de Nacimiento" 
-                        onfocus="(this.type='date')" 
-                        onblur="if(!this.value)this.type='text'" 
-                        required 
-                    />
-                </div>
-
-                <div class="input-group">
-                    <i class="fas fa-key"></i>
-                    <input type="password" name="newPassword" placeholder="Nueva Contraseña" required />
-                </div>
-                
-                <button type="submit" class="btn-modal" id="btnReset">Restablecer</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        const signUpButton = document.getElementById('signUp');
-        const signInButton = document.getElementById('signIn');
-        const container = document.getElementById('container');
-
-        signUpButton.addEventListener('click', () => container.classList.add("right-panel-active"));
-        signInButton.addEventListener('click', () => container.classList.remove("right-panel-active"));
-
-        // Modal
-        const modal = document.getElementById('resetModal');
-        const openModalBtn = document.getElementById('forgotPassLink');
-        const closeModalBtn = document.getElementById('closeModal');
-
-        openModalBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            modal.classList.add('active');
-            document.getElementById('formReset').reset();
-            document.getElementById('modalSuccess').style.display = 'none';
-            document.getElementById('modalError').style.display = 'none';
-        });
-
-        closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
-        
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) modal.classList.remove('active');
-        });
-    </script>
-
-    <script>
-        document.getElementById('formLogin').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            const params = new URLSearchParams(formData);
-            const btn = document.getElementById('btnLogin');
-            const originalText = btn.innerText;
-            
-            btn.innerText = 'Verificando...';
-            btn.disabled = true;
-            document.getElementById('alertError').style.display = 'none';
-            document.getElementById('alertDisabled').style.display = 'none';
-
-            fetch('/login', { method: 'POST', body: params })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    window.location.href = data.url;
-                } else {
-                    btn.innerText = originalText;
-                    btn.disabled = false;
-                    document.querySelector('.sign-in-container form').animate([
-                        { transform: 'translateX(0)' }, { transform: 'translateX(-10px)' },
-                        { transform: 'translateX(10px)' }, { transform: 'translateX(0)' }
-                    ], { duration: 300 });
-
-                    if (data.type === 'disabled') {
-                        document.getElementById('alertDisabled').style.display = 'flex';
-                    } else {
-                        document.getElementById('alertError').style.display = 'flex';
-                    }
-                }
-            })
-            .catch(() => {
-                btn.innerText = originalText;
-                btn.disabled = false;
-                document.getElementById('alertError').style.display = 'flex';
-            });
-        });
-    </script>
-
-    <script>
-        document.getElementById('formReset').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            const params = new URLSearchParams(formData);
-            const btn = document.getElementById('btnReset');
-            const originalText = btn.innerText;
-
-            btn.innerText = 'Procesando...';
-            btn.disabled = true;
-            document.getElementById('modalSuccess').style.display = 'none';
-            document.getElementById('modalError').style.display = 'none';
-
-            fetch('/reset-password', { method: 'POST', body: params })
-            .then(response => response.json())
-            .then(data => {
-                btn.innerText = originalText;
-                btn.disabled = false;
-                if (data.status === 'success') {
-                    document.getElementById('modalSuccess').style.display = 'flex';
-                    setTimeout(() => { document.getElementById('resetModal').classList.remove('active'); }, 2500);
-                } else {
-                    document.getElementById('modalError').style.display = 'flex';
-                }
-            })
-            .catch(() => {
-                btn.innerText = originalText;
-                btn.disabled = false;
-                document.getElementById('modalError').style.display = 'flex';
-            });
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', e => {
-                    const href = link.getAttribute('href');
-                    if (href && href !== '#' && link.id !== 'forgotPassLink' && !href.startsWith('javascript') && link.target !== '_blank') {
-                        e.preventDefault(); 
-                        document.body.classList.add('fade-out');
-                        setTimeout(() => { window.location.href = href; }, 400);
-                    }
-                });
-            });
-            window.addEventListener('pageshow', (event) => {
-                if (event.persisted) document.body.classList.remove('fade-out');
-            });
+        // 1. Lógica del Tema Oscuro/Claro
+        const toggleBtn = document.getElementById('themeToggle');
+        const icon = toggleBtn.querySelector('i');
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('theme') || 'light';
+
+        setTheme(savedTheme);
+
+        function setTheme(theme) {
+            html.setAttribute('data-bs-theme', theme);
+            localStorage.setItem('theme', theme);
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            const current = html.getAttribute('data-bs-theme');
+            setTheme(current === 'dark' ? 'light' : 'dark');
         });
+
+        // 2. Lógica de "Olvidé mi Contraseña"
+        function olvidePassword() {
+            const isDark = html.getAttribute('data-bs-theme') === 'dark';
+            
+            Swal.fire({
+                title: 'Recuperación de Cuenta',
+                text: 'Por motivos de seguridad, por favor contacta a un Administrador para restablecer tu contraseña.',
+                icon: 'info',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#4e73df',
+                background: isDark ? '#1e1e2f' : '#ffffff',
+                color: isDark ? '#ffffff' : '#333333'
+            });
+        }
     </script>
 </body>
 </html>

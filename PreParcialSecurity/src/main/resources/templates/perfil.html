@@ -1,182 +1,161 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>Mi Perfil</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<head>
+    <title>Mi Perfil | SecurityApp</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <link rel="stylesheet" th:href="@{/css/Home.css}">
-        <link rel="stylesheet" th:href="@{/css/Perfil.css}">
+    <link rel="stylesheet" th:href="@{/css/Home.css}">
+</head>
+<body>
 
-        <style>
-            /* Estilos específicos para SweetAlert Glassmorphism */
-            .swal2-popup {
-                backdrop-filter: blur(15px);
-                background: rgba(255, 255, 255, 0.25) !important;
-                border-radius: 20px !important;
-                border: 1px solid rgba(255, 255, 255, 0.4) !important;
-                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3) !important;
-                color: #ffffff !important;
-            }
-            .swal2-title, .swal2-html-container {
-                color: #ffffff !important;
-                font-weight: 800 !important;
-            }
-            .swal2-styled.swal2-confirm {
-                background: linear-gradient(135deg, #a36bff, #7c4dff) !important;
-                color: white !important;
-                border-radius: 25px !important;
-                border: none !important;
-                box-shadow: 0 4px 15px rgba(163, 107, 255, 0.4) !important;
-            }
-            .swal2-styled.swal2-cancel {
-                background: rgba(255, 255, 255, 0.3) !important;
-                color: #ffffff !important;
-                border: 1px solid rgba(255, 255, 255, 0.6) !important;
-                border-radius: 25px !important;
-            }
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-glass fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/home">
+                <i class="fas fa-shield-alt me-2"></i> SecurityApp
+            </a>
 
-            /* === CORRECCIÓN ICONO: ELIMINAR LA CAPA BLANCA === */
-            /* Esto hace transparente la "tapa" que usa la animación y el anillo */
-            .swal2-icon,
-            .swal2-success-ring,
-            .swal2-success-fix,
-            .swal2-success-circular-line-left,
-            .swal2-success-circular-line-right {
-                background-color: transparent !important;
-            }
-        </style>
-    </head>
-    <body>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <nav class="navbar navbar-expand-lg navbar-dark navbar-glass fixed-top">
-            <div class="container">
-                <a class="navbar-brand" href="/home">
-                    <i class="fas fa-shield-alt me-2"></i> SecurityApp
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                    <form th:action="@{/logout}" method="post" class="d-flex mt-3 mt-lg-0">
-                        <button class="btn btn-outline-light rounded-pill px-4 fw-bold w-100" type="submit">
-                            <i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="ms-auto d-flex align-items-center gap-3 mt-3 mt-lg-0">
+                    
+                    <button class="btn-theme-toggle" id="themeToggle" title="Cambiar Tema">
+                        <i class="fas fa-moon"></i>
+                    </button>
+
+                    <form th:action="@{/logout}" method="post" class="m-0">
+                        <button class="btn btn-outline-light btn-sm rounded-pill px-3 fw-bold" type="submit">
+                            <i class="fas fa-sign-out-alt me-1"></i> Salir
                         </button>
                     </form>
                 </div>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <div class="content py-5" style="margin-top: 60px;">
-            <div class="container">
+    <div class="content py-5 mt-5">
+        <div class="container">
 
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h2 class="fw-bold text-white mb-0" style="text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-                                <i class="fas fa-id-card"></i> Mi Perfil
-                            </h2>
-                            <a th:href="@{/home}" class="btn btn-light rounded-pill shadow-sm fw-bold">
-                                <i class="fas fa-arrow-left"></i> Volver al Home
-                            </a>
-                        </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold mb-1">Mi Perfil</h2>
+                    <p class="text-muted mb-0">Visualiza tu información personal</p>
+                </div>
+                <a th:href="@{/home}" class="btn btn-cancel shadow-sm">
+                    <i class="fas fa-arrow-left me-1"></i> Volver
+                </a>
+            </div>
+
+            <div class="modern-card profile-view-container">
+
+                <a th:href="@{/perfil/editar}" class="btn-corner-edit" title="Editar mis datos">
+                    <i class="fas fa-pen"></i>
+                </a>
+
+                <div class="profile-header">
+                    <div class="mb-3">
+                        <img th:if="${usuario.perfil.avatar != null}" 
+                             th:src="@{${usuario.perfil.avatar}}" class="avatar-circle" style="width: 120px; height: 120px;">
+                        <img th:if="${usuario.perfil.avatar == null}" 
+                             th:src="@{/Profiles/default.jpg}" class="avatar-circle" style="width: 120px; height: 120px;">
                     </div>
+
+                    <h2 class="user-fullname" th:text="${usuario.perfil.nombre + ' ' + usuario.perfil.apellido}">
+                        Nombre Usuario
+                    </h2>
+
+                    <span class="role-badge" 
+                          th:classappend="${usuario.rol.name() == 'ADMINISTRADOR' ? 'badge-admin' : ''}"
+                          th:text="${usuario.rol}">ROL</span>
                 </div>
 
-                <div class="profile-glass-card">
+                <div class="p-4 p-lg-5">
+                    <div class="row g-4 justify-content-center">
 
-                    <a th:href="@{/perfil/editar}" class="btn-corner-edit" title="Editar mis datos">
-                        <i class="fas fa-pen"></i>
-                    </a>
-
-                    <div class="profile-header">
-                        <div class="avatar-read-container">
-                            <img th:if="${usuario.perfil.avatar != null}" 
-                                 th:src="@{${usuario.perfil.avatar}}" class="avatar-read-img">
-                            <img th:if="${usuario.perfil.avatar == null}" 
-                                 th:src="@{/Profiles/default.jpg}" 
-                                 class="avatar-img" alt="Avatar por defecto">
-                        </div>
-
-                        <h2 class="user-fullname" th:text="${usuario.perfil.nombre + ' ' + usuario.perfil.apellido}">
-                            Nombre Usuario
-                        </h2>
-
-                        <span class="role-badge" 
-                              th:classappend="${usuario.rol.name() == 'ADMINISTRADOR' ? 'badge-admin' : 'badge-user'}"
-                              th:text="${usuario.rol}">
-                            ROL
-                        </span>
-                    </div>
-
-                    <div class="row g-4 px-md-4 justify-content-center">
                         <div class="col-md-4">
-                            <div class="data-label"><i class="fas fa-user me-1"></i> Usuario</div>
+                            <div class="data-label">Usuario</div>
                             <div class="read-only-field">
                                 <i class="fas fa-at"></i>
                                 <span th:text="${usuario.username}">user123</span>
                             </div>
                         </div>
+
                         <div class="col-md-4">
-                            <div class="data-label"><i class="fas fa-envelope me-1"></i> Correo Electrónico</div>
+                            <div class="data-label">Correo Electrónico</div>
                             <div class="read-only-field">
                                 <i class="far fa-envelope"></i>
-                                <span th:text="${usuario.perfil.email}" class="text-truncate d-block" style="max-width: 100%;">correo@ejemplo.com</span>
+                                <span th:text="${usuario.perfil.email}" class="text-truncate">correo@ejemplo.com</span>
                             </div>
                         </div>
+
                         <div class="col-md-4">
-                            <div class="data-label"><i class="fas fa-calendar-alt me-1"></i> Fecha de Nacimiento</div>
+                            <div class="data-label">Fecha de Nacimiento</div>
                             <div class="read-only-field">
                                 <i class="far fa-calendar"></i>
                                 <span th:text="${#temporals.format(usuario.perfil.fechaNacimiento, 'dd/MM/yyyy')} ?: 'No definida'">01/01/2000</span>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
+
             </div>
         </div>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        <script th:inline="javascript">
-            /*<![CDATA[*/
-            document.addEventListener('DOMContentLoaded', function () {
-                var msgError = /*[[${error}]]*/ null;
-                var msgSuccess = /*[[${success}]]*/ null;
-                const swalTheme = {
-                    confirmButtonColor: '#a36bff',
-                    background: 'transparent',
-                    backdrop: `rgba(0,0,0,0.4)`
-                };
-                if (msgSuccess) {
-                    Swal.fire({ ...swalTheme, icon: 'success', title: '¡Perfil Actualizado!', text: msgSuccess, timer: 3000, showConfirmButton: true });
-                } else if (msgError) {
-                    Swal.fire({ ...swalTheme, icon: 'error', title: 'Ocurrió un error', text: msgError });
-                }
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // --- 1. LÓGICA TEMA OSCURO ---
+            const toggleBtn = document.getElementById('themeToggle');
+            const icon = toggleBtn.querySelector('i');
+            const html = document.documentElement;
+            
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+
+            function setTheme(theme) {
+                html.setAttribute('data-bs-theme', theme);
+                localStorage.setItem('theme', theme);
+                icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+
+            toggleBtn.addEventListener('click', () => {
+                setTheme(html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
             });
-            /*]]>*/
-        </script>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                document.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', e => {
-                        const href = link.getAttribute('href');
-                        if (href && !href.startsWith('#') && !href.startsWith('javascript') && link.target !== '_blank') {
-                            e.preventDefault(); 
-                            document.body.classList.add('fade-out');
-                            setTimeout(() => { window.location.href = href; }, 400);
-                        }
-                    });
+
+            // --- 2. LÓGICA ALERTAS ---
+            var msgError = /*[[${error}]]*/ null;
+            var msgSuccess = /*[[${success}]]*/ null;
+
+            if (msgSuccess) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Operación Exitosa!',
+                    text: msgSuccess,
+                    timer: 3000,
+                    showConfirmButton: false
                 });
-                window.addEventListener('pageshow', (event) => {
-                    if (event.persisted) {
-                        document.body.classList.remove('fade-out');
-                    }
+            } else if (msgError) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: msgError
                 });
-            });
-        </script>
-    </body>
+            }
+        });
+        /*]]>*/
+    </script>
+</body>
 </html>

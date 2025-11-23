@@ -1,266 +1,323 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,800');
-
 /* =========================================
-   1. ESTILO GENERAL Y FONDO ANIMADO
+   1. VARIABLES Y CONFIGURACIÓN GLOBAL
    ========================================= */
+:root {
+    /* Paleta de Colores */
+    --primary: #4e73df;
+    --primary-dark: #2e59d9;
+    --secondary: #858796;
+    --success: #1cc88a;
+    --info: #36b9cc;
+    --warning: #f6c23e;
+    --danger: #e74a3b;
+
+    /* --- TEMA CLARO (LIGHT) --- */
+    --bg-body: #f3f4f6;
+    --bg-card: #ffffff;
+    --text-main: #2d3748;
+    --text-muted: #718096;
+    --border-color: #e3e6f0;
+    --card-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    --navbar-bg: rgba(34, 74, 190, 0.95);
+    
+    /* Fondo del Login en Modo Claro (Azul Suave y Limpio) */
+    --login-bg: linear-gradient(135deg, #E3F2FD 0%, #90CAF9 100%);
+    --glass-card-bg: rgba(255, 255, 255, 0.85); /* Más opaco para leer bien */
+    --glass-border: rgba(255, 255, 255, 0.9);
+}
+
+[data-bs-theme="dark"] {
+    /* --- TEMA OSCURO (DARK) --- */
+    --bg-body: #111827;
+    --bg-card: #1f2937;
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    --border-color: rgba(255,255,255,0.1);
+    --card-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    --navbar-bg: rgba(17, 24, 39, 0.95);
+
+    /* Fondo del Login en Modo Oscuro (Cyberpunk) */
+    --login-bg: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    --glass-card-bg: rgba(30, 30, 47, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.08);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+
+/* Estilos Base Generales */
 body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
     margin: 0;
-    padding: 0;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a { text-decoration: none; color: var(--primary); transition: 0.2s; }
+a:hover { color: var(--primary-dark); }
+h1, h2, h3, h4, h5, h6 { color: var(--text-main); font-weight: 700; }
+
+/* =========================================
+   2. ESTILOS ESPECÍFICOS DEL LOGIN
+   ========================================= */
+/* Estos estilos solo aplican si el body tiene la clase 'login-body' */
+body.login-body {
     min-height: 100vh;
-    font-family: 'Montserrat', sans-serif;
-    color: #333;
-    
-    /* Fondo vibrante */
-    background: linear-gradient(-45deg, #7eb4ff, #a674ff, #5dc8ff, #8d7aff);
-    background-size: 400% 400%;
-    background-attachment: fixed;
-
-    /* === ANIMACIÓN INTEGRADA: Fondo móvil + Entrada suave (Fade In) === */
-    animation: gradientMove 12s ease infinite, fadeIn 0.6s ease-out;
-    
-    /* Propiedades para la transición de salida */
-    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
-    opacity: 1; /* Estado normal visible */
-}
-
-/* Animación del fondo */
-@keyframes gradientMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* === NUEVO: Animación de Entrada (Fade In) === */
-@keyframes fadeIn {
-    from { 
-        opacity: 0; 
-        transform: translateY(15px); /* Sutil efecto de subida */
-        filter: blur(5px);           /* Empieza borroso */
-    }
-    to { 
-        opacity: 1; 
-        transform: translateY(0);
-        filter: blur(0);
-    }
-}
-
-/* === NUEVO: Clase de Salida (Fade Out) === 
-   Se aplica con JS al hacer clic en un link */
-body.fade-out {
-    opacity: 0;
-    transform: scale(0.98); /* Se encoge ligeramente al irse */
-    filter: blur(5px);      /* Se desenfoca al irse */
-    pointer-events: none;   /* Bloquea clics extra */
-}
-
-/* =========================================
-   2. NAVBAR (Acrílico)
-   ========================================= */
-.navbar-glass {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    padding: 15px 0;
-}
-
-.navbar-brand {
-    font-weight: 800;
-    letter-spacing: 1px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.btn-outline-light {
-    border-color: rgba(255, 255, 255, 0.6);
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(4px);
-    font-weight: 600;
-}
-.btn-outline-light:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: white;
-}
-
-/* =========================================
-   3. PANEL PRINCIPAL (Base: 1366x768)
-   ========================================= */
-.glass-panel {
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    
-    border-radius: 25px;
-    padding: 50px 40px; 
-    
-    overflow: hidden; 
-    
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-top: 1px solid rgba(255, 255, 255, 0.7);
-    border-left: 1px solid rgba(255, 255, 255, 0.7);
-    
-    margin-top: 80px; 
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    max-width: 100%;
-}
-
-.glass-panel:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px 0 rgba(31, 38, 135, 0.3);
-}
-
-/* Imagen de Avatar */
-.avatar-container {
-    position: relative;
-    width: 140px;
-    height: 140px;
-    margin: 0 auto 25px auto;
-}
-
-.avatar-img { 
-    width: 100%; 
-    height: 100%; 
-    border-radius: 50%; 
-    object-fit: cover; 
-    border: 4px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-}
-
-.glass-panel:hover .avatar-img {
-    transform: scale(1.05);
-    border-color: rgba(255, 255, 255, 0.9);
-}
-
-/* Textos */
-.user-name {
-    font-weight: 800;
-    color: #2c3e50;
-    margin-bottom: 5px;
-    font-size: 2rem;
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
-}
-
-.user-email {
-    color: #333;
-    font-weight: 500;
-    font-size: 1rem;
-    margin-bottom: 25px;
-}
-
-/* =========================================
-   4. BADGE DE ROL
-   ========================================= */
-.role-badge {
-    color: white;
-    padding: 10px 30px;
-    border-radius: 50px;
-    font-size: 0.9rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    font-weight: 700;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-}
-
-.badge-admin {
-    background: linear-gradient(135deg, rgba(255, 107, 107, 0.95), rgba(255, 71, 87, 0.95));
-    box-shadow: 0 4px 20px rgba(255, 71, 87, 0.4);
-}
-
-.badge-user {
-    background: linear-gradient(135deg, rgba(79, 154, 255, 0.95), rgba(55, 66, 250, 0.95));
-    box-shadow: 0 4px 20px rgba(55, 66, 250, 0.4);
-}
-
-/* =========================================
-   5. BOTONES PERSONALIZADOS (3 en fila)
-   ========================================= */
-.btn-custom {
-    border-radius: 50px;
-    padding: 12px 20px; 
-    font-weight: 700;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    margin: 0; /* Importante para el grid */
-    
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    text-decoration: none;
-    
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    background: var(--login-bg); /* Usa la variable dinámica */
+    position: relative;
 }
 
-.btn-profile { 
-    background: linear-gradient(to right, rgba(126, 180, 255, 0.85), rgba(79, 154, 255, 0.85)); 
+/* Animación de Burbujas (Solo decorativo) */
+body.login-body::before, body.login-body::after {
+    content: ''; position: absolute; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.4;
+}
+body.login-body::before {
+    width: 400px; height: 400px; background: var(--primary);
+    top: -100px; left: -100px; animation: float 10s infinite alternate;
+}
+body.login-body::after {
+    width: 300px; height: 300px; background: var(--danger);
+    bottom: -50px; right: -50px; animation: float 8s infinite alternate-reverse;
+}
+@keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(30px, 50px); } }
+
+/* Tarjeta Cristal del Login (Mejorada) */
+.glass-card {
+    position: relative; z-index: 1;
+    background: var(--glass-card-bg); /* Fondo dinámico */
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    border-radius: 24px; width: 450px; max-width: 90%;
+    overflow: hidden; animation: fadeInUp 0.6s ease-out;
+}
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.glass-header {
+    background: rgba(128, 128, 128, 0.05); padding: 30px 30px 10px 30px; text-align: center;
+    border-bottom: 1px solid var(--glass-border);
+}
+.glass-body { padding: 30px; }
+
+.app-logo { font-size: 2rem; color: var(--text-main); margin-bottom: 5px; }
+.app-logo i { color: var(--primary); }
+
+/* Botón Toggle Flotante */
+.theme-toggle-fixed {
+    position: fixed; top: 20px; right: 20px; z-index: 100;
+    background: var(--bg-card); color: var(--text-main);
+    width: 45px; height: 45px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--card-shadow); border: 1px solid var(--border-color); cursor: pointer;
 }
 
-.btn-admin { 
-    background: linear-gradient(to right, rgba(163, 107, 255, 0.85), rgba(141, 119, 255, 0.85)); 
+/* Tabs Login */
+.nav-pills-custom { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+.nav-pills-custom .nav-link {
+    color: var(--text-muted); background: transparent; border-radius: 30px;
+    padding: 8px 25px; font-weight: 600; font-size: 0.9rem; border: 1px solid transparent; transition: 0.3s;
+}
+.nav-pills-custom .nav-link.active {
+    background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(78, 115, 223, 0.4);
 }
 
-.btn-custom:hover { 
-    transform: translateY(-3px) scale(1.02); 
-    color: white; 
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    background-color: rgba(255,255,255,0.1); 
+/* Botón Gradiente */
+.btn-gradient {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white; border: none; padding: 12px; border-radius: 12px;
+    font-weight: 600; width: 100%; margin-top: 10px; transition: 0.2s;
 }
+.btn-gradient:hover { transform: translateY(-2px); color: white; box-shadow: 0 5px 15px rgba(78, 115, 223, 0.4); }
+
+/* Alertas Login */
+.alert-glass {
+    background: rgba(231, 74, 59, 0.1); border: 1px solid rgba(231, 74, 59, 0.2);
+    color: #e74a3b; border-radius: 12px; padding: 10px 15px; font-size: 0.9rem;
+    display: flex; align-items: center; margin-bottom: 15px;
+}
+.alert-glass.success { background: rgba(28, 200, 138, 0.1); border-color: rgba(28, 200, 138, 0.2); color: #1cc88a; }
+.alert-glass.warning { background: rgba(246, 194, 62, 0.1); border-color: rgba(246, 194, 62, 0.2); color: #f6c23e; }
+
 
 /* =========================================
-   6. MEDIA QUERY: PANTALLAS GRANDES (1080p+)
+   3. ESTILOS INTERNOS (HOME, ADMIN, PERFIL)
    ========================================= */
-@media (min-width: 1400px) {
-    .glass-panel {
-        padding: 70px 50px;
-        max-width: 1000px; 
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 100px;
-        border-radius: 35px;
-    }
 
-    .avatar-container {
-        width: 170px;
-        height: 170px;
-        margin-bottom: 30px;
-    }
+/* Navbar */
+.navbar-glass {
+    background: var(--navbar-bg) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    padding: 0.8rem 0;
+}
+.navbar-brand { font-weight: 700; letter-spacing: -0.5px; color: white !important; font-size: 1.25rem; }
 
-    .user-name { font-size: 2.5rem; margin-bottom: 10px; }
-    .user-email { font-size: 1.1rem; margin-bottom: 30px; }
+.btn-theme-toggle {
+    background: rgba(255,255,255,0.15); color: white; border: none;
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; cursor: pointer;
+}
+.btn-theme-toggle:hover { background: rgba(255,255,255,0.3); transform: rotate(15deg); }
 
-    .btn-custom {
-        padding: 15px 30px;
-        font-size: 1.1rem;
-        gap: 12px;
-    }
-    
-    .role-badge {
-        font-size: 1rem;
-        padding: 12px 35px;
-    }
+/* Tarjetas Principales */
+.modern-card, .profile-card, .action-card {
+    background: var(--bg-card);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
 }
 
-/* =========================================
-   7. RESPONSIVIDAD MÓVIL
-   ========================================= */
-@media (max-width: 768px) {
-    .glass-panel {
-        padding: 30px 20px;
-        margin-top: 100px;
-    }
-    
-    .btn-custom {
-        width: 100%;
-        margin: 0;
-    }
+/* Header Perfil */
+.profile-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    padding: 40px 20px; color: white; text-align: center;
 }
+[data-bs-theme="dark"] .profile-header {
+    background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+}
+
+.avatar-circle {
+    width: 100px; height: 100px; border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.3);
+    object-fit: cover; margin-bottom: 15px;
+    background-color: var(--bg-card);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Home Action Cards */
+.action-card {
+    padding: 30px; height: 100%;
+    display: flex; flex-direction: column; justify-content: center;
+}
+.action-card:hover {
+    transform: translateY(-5px); box-shadow: 0 1rem 3rem rgba(0,0,0,0.175);
+    border-color: var(--primary);
+}
+.action-card::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%;
+    background: var(--border-color); transition: 0.3s;
+}
+.action-card:hover::before { background: var(--primary); }
+.admin-card:hover::before { background: var(--danger); }
+
+.icon-box {
+    width: 60px; height: 60px; border-radius: 15px;
+    background: rgba(78, 115, 223, 0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; margin-bottom: 20px;
+    color: var(--primary); transition: 0.3s;
+}
+[data-bs-theme="dark"] .icon-box { background: rgba(255,255,255,0.05); }
+.action-card:hover .icon-box { background: var(--primary); color: white; }
+.admin-card .icon-box { color: var(--danger); background: rgba(231, 74, 59, 0.1); }
+.admin-card:hover .icon-box { background: var(--danger); color: white; }
+
+.card-title { margin-bottom: 8px; font-size: 1.2rem; }
+.card-desc { color: var(--text-muted); font-size: 0.95rem; margin: 0; line-height: 1.5; }
+
+/* Admin Tables */
+.section-header-card {
+    padding: 20px 25px; border-bottom: 1px solid var(--border-color);
+    display: flex; justify-content: space-between; align-items: center;
+    background-color: rgba(0,0,0,0.01);
+}
+
+.custom-table { width: 100%; margin: 0; color: var(--text-main); border-color: var(--border-color); }
+.custom-table thead th {
+    background-color: rgba(0,0,0,0.03); color: var(--text-muted);
+    font-weight: 600; font-size: 0.85rem; text-transform: uppercase;
+    padding: 15px; border-bottom: 2px solid var(--border-color);
+}
+.custom-table tbody td { padding: 15px; vertical-align: middle; border-bottom: 1px solid var(--border-color); }
+.custom-table tbody tr:hover { background-color: rgba(0,0,0,0.02); }
+
+.table-avatar {
+    width: 40px; height: 40px; object-fit: cover; border-radius: 50%;
+    border: 2px solid var(--border-color); margin-right: 10px;
+}
+
+/* Inputs & Forms */
+.form-floating > .form-control, .form-select {
+    background-color: var(--bg-body); border: 1px solid var(--border-color);
+    border-radius: 12px; color: var(--text-main);
+}
+.form-floating > .form-control:focus, .form-select:focus {
+    background-color: var(--bg-card); border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(78, 115, 223, 0.15);
+}
+.form-floating > label { color: var(--text-muted); }
+
+/* Perfil: Sidebar & Edit */
+.profile-sidebar {
+    background: linear-gradient(145deg, var(--bg-body) 0%, var(--bg-card) 100%);
+    border-right: 1px solid var(--border-color); padding: 40px 20px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.avatar-upload { position: relative; max-width: 180px; margin-bottom: 20px; }
+.avatar-preview {
+    width: 160px; height: 160px; border-radius: 50%;
+    border: 6px solid var(--bg-card); box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+.avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+.avatar-edit { position: absolute; right: 10px; bottom: 10px; z-index: 10; }
+.avatar-edit label {
+    display: flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--primary); color: white; border: 3px solid var(--bg-card);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15); cursor: pointer; transition: 0.2s;
+}
+.avatar-edit label:hover { transform: scale(1.1); }
+.form-section { padding: 40px; }
+.section-header { margin-bottom: 25px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+
+/* Perfil: Read Only */
+.profile-view-container { position: relative; }
+.btn-corner-edit {
+    position: absolute; top: 20px; right: 20px; z-index: 10;
+    width: 45px; height: 45px; border-radius: 50%;
+    background: var(--bg-card); color: var(--text-muted);
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: 0.2s;
+}
+.btn-corner-edit:hover { background: var(--primary); color: white; transform: scale(1.1); border-color: transparent; }
+
+.read-only-field {
+    background-color: var(--bg-body); border: 1px solid var(--border-color);
+    border-radius: 12px; padding: 15px 20px;
+    display: flex; align-items: center; color: var(--text-main);
+    font-weight: 500; min-height: 55px;
+}
+.read-only-field i { margin-right: 15px; color: var(--primary); width: 20px; text-align: center; }
+.data-label { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; }
+
+/* Botones */
+.btn-save {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white; border: none; padding: 10px 25px; border-radius: 50px; font-weight: 600;
+    box-shadow: 0 4px 10px rgba(78, 115, 223, 0.3);
+}
+.btn-save:hover { transform: translateY(-2px); color: white; box-shadow: 0 6px 15px rgba(78, 115, 223, 0.4); }
+.btn-cancel {
+    background: var(--bg-body); color: var(--text-muted); border: 1px solid var(--border-color);
+    padding: 10px 25px; border-radius: 50px; font-weight: 600;
+}
+.btn-cancel:hover { background: var(--border-color); color: var(--text-main); }
+
+/* SweetAlert Fix */
+div:where(.swal2-container) div:where(.swal2-popup) {
+    background: var(--bg-card) !important; color: var(--text-main) !important;
+    border: 1px solid var(--border-color); border-radius: 20px !important;
+}
+div:where(.swal2-container) .swal2-title { color: var(--text-main) !important; }
+div:where(.swal2-container) .swal2-html-container { color: var(--text-muted) !important; }
