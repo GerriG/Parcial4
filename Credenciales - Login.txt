@@ -8,6 +8,6 @@ Contraseña: Admin
 --------------------------------------
 	       Usuario
 --------------------------------------
-Usuario: User
-Contraseña: User
+Usuario: Usuario
+Contraseña: Usuario
 --------------------------------------
