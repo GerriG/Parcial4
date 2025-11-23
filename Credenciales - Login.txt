@@ -8,6 +8,6 @@ Contraseña: Admin
 --------------------------------------
 	       Usuario
 --------------------------------------
-Usuario: Userio
-Contraseña: Userio
+Usuario: Usuario
+Contraseña: Usuario
 --------------------------------------
