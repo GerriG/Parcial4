@@ -28,8 +28,9 @@ public class Usuario {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    // RELACIÓN UNO A UNO: El dueño de la relación es Perfil, aquí usamos mappedBy
-    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    // --- MODIFICACIÓN AQUÍ ---
+    // orphanRemoval = true: Refuerza el borrado del perfil si el usuario desaparece
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private Perfil perfil;
 
     @PrePersist
@@ -37,25 +38,31 @@ public class Usuario {
         this.createdAt = LocalDateTime.now();
     }
 
-    // Constructor vacío
     public Usuario() {}
 
     // Getters y Setters
     public Long getIdUsuario() { return idUsuario; }
     public void setIdUsuario(Long idUsuario) { this.idUsuario = idUsuario; }
+    
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
+    
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+    
     public Rol getRol() { return rol; }
     public void setRol(Rol rol) { this.rol = rol; }
+    
     public Boolean getEstado() { return estado; }
     public void setEstado(Boolean estado) { this.estado = estado; }
+    
     public LocalDateTime getCreatedAt() { return createdAt; }
+    
     public Perfil getPerfil() { return perfil; }
+    
     public void setPerfil(Perfil perfil) { 
         this.perfil = perfil;
-        // Vinculación bidireccional esencial para CascadeType.ALL
+        // Vinculación bidireccional: Clave para que Cascade funcione al crear
         if(perfil != null) perfil.setUsuario(this);
     }
 }
